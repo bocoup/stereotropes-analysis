@@ -13,7 +13,6 @@ def read_json(path):
     file.close
     return data
 
-
 def get_tropes_from_rdf(fp):
     trope_data = read_json(fp)
     results = list()
@@ -27,6 +26,22 @@ def get_tropes_from_rdf(fp):
             pass
     return results
 
+def get_film_from_rdf(fp):
+    film_data = read_json(fp)
+    results = list()
+    for binding in film_data['results']['bindings']:
+        try:
+            trope = binding['trope']['value'].split('/')[-1]
+            film = binding['film']['value'].split('/')[-1]
+            film_name = binding['label']['value']
+            film_category = binding['film_category_label']['value']
+
+            results.append((trope, film, film_name, film_category))
+        except:
+            pass
+
+    return results
+
 
 def tag_tropes(fp):
     tropes = read_json(fp)
@@ -37,7 +52,6 @@ def tag_tropes(fp):
         result = tagger.tag(description)
         results.append((trope, result['tagged'], result['by_tag']))
     return results
-
 
 def extract_adjectives(path):
     tagged_tropes = read_json(path)
@@ -51,6 +65,68 @@ def extract_adjectives(path):
         results.append((tagged[0], adjectives))
     return results
 
+def extract_film_categories(path):
+    film_roles = read_json(path)
+    categories = dict([])
+    category_names = list()
+
+    for tup in film_roles:
+        film_category = tup[-1]
+        if (film_category in categories):
+            categories[film_category].append((tup[0], tup[1]))
+        else:
+            categories[film_category] = [(tup[0], tup[1])]
+            category_names.append(film_category)
+
+    for cat in category_names:
+        tuples = categories[cat]
+        categories[cat] = {
+            'count' : len(tuples),
+            'films' : [tup[1] for tup in tuples],
+            'tropes': [tup[0] for tup in tuples]
+        }
+
+    return categories
+
+def extract_trope_films(path):
+    film_roles = read_json(path)
+    tropes = {
+        'count' : 0,
+        'values' : {}
+    }
+    for tup in film_roles:
+        trope = tup[0]
+        if (trope in tropes['values']):
+
+            # Aggregate trope -> film appearance + counts/unique
+
+            if (tup[1] not in tropes['values'][trope]['films']):
+                tropes['values'][trope]['films_unique'] += 1
+
+            tropes['values'][trope]['films'].append(tup[1])
+            tropes['values'][trope]['films_count'] += 1
+
+            # Aggregate trope -> film category appearance + counts/unique
+
+            if (tup[3] not in tropes['values'][trope]['categories']):
+                 tropes['values'][trope]['categories_unique'] += 1
+
+            tropes['values'][trope]['categories'].append(tup[3])
+            tropes['values'][trope]['categories_count'] += 1
+
+        else:
+            tropes['count'] += 1
+
+            tropes['values'][trope] = {
+                'films' : [tup[1]],
+                'films_count' : 1,
+                'films_unique' : 1,
+                'categories': [tup[3]],
+                'categories_count': 1,
+                'categories_unique': 1
+            }
+
+    return tropes
 
 def make_base_corpus(corpora):
     print('corpora', corpora)
@@ -80,6 +156,15 @@ if __name__ == "__main__":
     if args.command == 'extract_tropes':
         tropes = get_tropes_from_rdf(args.source[0])
         write_json(args.dest, tropes)
+    elif args.command == 'extract_films':
+        films = get_film_from_rdf(args.source[0])
+        write_json(args.dest, films)
+    elif args.command == 'extract_film_categories':
+        film_categories = extract_film_categories(args.source[0])
+        write_json(args.dest, film_categories)
+    elif args.command == 'extract_trope_films':
+        trope_film_categories = extract_trope_films(args.source[0])
+        write_json(args.dest, trope_film_categories)
     elif args.command == 'tag_tropes':
         tagged_results = tag_tropes(args.source[0])
         write_json(args.dest, tagged_results)
