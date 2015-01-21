@@ -1,0 +1,123 @@
+{
+  "head": {
+    "vars": [ "genre" ]
+  } ,
+  "results": {
+    "bindings": [
+      {
+        "genre": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/FilmsOfThe1970s" }
+      } ,
+      {
+        "genre": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/AnimatedFilms" }
+      } ,
+      {
+        "genre": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/FilmsOfThe1980s" }
+      } ,
+      {
+        "genre": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/FilmsOfThe1960s" }
+      } ,
+      {
+        "genre": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/FilmsOfThe2010s" }
+      } ,
+      {
+        "genre": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/FilmsOfThe1990s" }
+      } ,
+      {
+        "genre": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/FilmsOfThe2000s" }
+      } ,
+      {
+        "genre": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/FilmsOfThe1950s" }
+      } ,
+      {
+        "genre": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/FilmsOfThe1930s" }
+      } ,
+      {
+        "genre": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/FilmsOfThe1940s" }
+      } ,
+      {
+        "genre": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/EarlyFilms" }
+      } ,
+      {
+        "genre": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/FilmsOfThe1920s" }
+      } ,
+      {
+        "genre": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/FilmTropes" }
+      } ,
+      {
+        "genre": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/HomeVideoTropes" }
+      } ,
+      {
+        "genre": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/Nollywood" }
+      } ,
+      {
+        "genre": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/FilmSeries" }
+      } ,
+      {
+        "genre": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/FantasyFilms" }
+      } ,
+      {
+        "genre": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/ScienceFictionFilms" }
+      } ,
+      {
+        "genre": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/HorrorFilms" }
+      } ,
+      {
+        "genre": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/FrenchFilms" }
+      } ,
+      {
+        "genre": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/IndexOfFilmWesterns" }
+      } ,
+      {
+        "genre": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/MysteryAndDetectiveFilms" }
+      } ,
+      {
+        "genre": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/TelevisionMovieIndex" }
+      } ,
+      {
+        "genre": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/HongKongFilms" }
+      } ,
+      {
+        "genre": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/MilitaryAndWarfareFilms" }
+      } ,
+      {
+        "genre": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/JapaneseFilms" }
+      } ,
+      {
+        "genre": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/RogerEbertMostHatedFilmList" }
+      } ,
+      {
+        "genre": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/KoreanMovies" }
+      } ,
+      {
+        "genre": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/BollywoodMovies" }
+      } ,
+      {
+        "genre": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/RiffTraxMovies" }
+      } ,
+      {
+        "genre": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/CzechFilms" }
+      } ,
+      {
+        "genre": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/BritishFilms" }
+      } ,
+      {
+        "genre": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/RussianFilms" }
+      } ,
+      {
+        "genre": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/ChineseFilms" }
+      } ,
+      {
+        "genre": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/GermanFilms" }
+      } ,
+      {
+        "genre": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/ItalianFilms" }
+      } ,
+      {
+        "genre": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/AFIS100Years100Movies" }
+      } ,
+      {
+        "genre": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/AFIS100Years100Movies10THAnniversaryEdition" }
+      }
+    ]
+  }
+}
