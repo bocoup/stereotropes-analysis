@@ -5,6 +5,15 @@
   "results": {
     "bindings": [
       {
+        "genre": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/FilmsOfThe2000sFranchises" }
+      } ,
+      {
+        "genre": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/FilmsOf2000-2004" }
+      } ,
+      {
+        "genre": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/FilmsOf2005-2009" }
+      } ,
+      {
         "genre": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/FilmsOfThe1970s" }
       } ,
       {
