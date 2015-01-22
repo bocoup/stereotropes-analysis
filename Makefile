@@ -7,6 +7,23 @@ movie_categories: data/results/female_film_categories.json data/results/male_fil
 movie_tropes: data/results/female_film_tropes.json data/results/male_film_tropes.json
 
 
+analyse: analysis_dir log_likelyhood
+analysis_dir:
+	mkdir -p data/analysis
+
+log_likelyhood: data/analysis/male_ll.json data/analysis/female_ll.json
+
+data/analysis/male_ll.json: data/results/base_corpus.json data/results/male_corpus.json
+	python analyse_data.py --command log_likelyhood --source data/results/male_corpus.json data/results/base_corpus.json --dest $@
+	# touch $@
+
+data/analysis/female_ll.json: data/results/base_corpus.json data/results/female_corpus.json
+	python analyse_data.py --command log_likelyhood --source data/results/female_corpus.json data/results/base_corpus.json --dest $@
+	# touch $@
+
+
+
+
 # Trope extraction
 data/results/female_tropes.json: data/raw/FemaleTropesWithDescription.json
 	mkdir -p data/results
