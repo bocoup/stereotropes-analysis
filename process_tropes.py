@@ -100,7 +100,16 @@ def build_trope_count_per_decade(tropes):
         'Films of the 1980s',
         'Films of the 1990s',
         'Films of the 2000s',
+        'Films Of The 2000s-Franchises',
+        'Films of 2000-2004',
+        'Films of 2005-2009',
         'Films of the 2010s'
+    ]
+
+    decades_of_2000 = [
+        'Films Of The 2000s-Franchises',
+        'Films of 2000-2004',
+        'Films of 2005-2009',
     ]
 
     for trope_name in tropes['values']:
@@ -122,7 +131,14 @@ def build_trope_count_per_decade(tropes):
         for decade in decades:
             if decade not in decade_counts:
                 decade_counts[decade] = 0
-            decade_counts_list.append((decade, decade_counts[decade]))
+
+            if decade in decades_of_2000:
+                decade_counts['Films of the 2000s'] += decade_counts[decade]
+                del decade_counts[decade]
+
+        for decade in decades:
+            if decade not in decades_of_2000:
+                decade_counts_list.append((decade, decade_counts[decade]))
 
         tropes['values'][trope_name]['decade_counts'] = decade_counts_list
 
@@ -168,6 +184,7 @@ def extract_trope_films(path):
             }
 
     tropes = build_trope_count_per_decade(tropes)
+    tropes['values'] = tropes['values'].items()
     return tropes
 
 # This will combine the words (adjectives) from each corpus file in corpora
