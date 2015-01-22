@@ -170,14 +170,27 @@ def extract_trope_films(path):
     tropes = build_trope_count_per_decade(tropes)
     return tropes
 
+# This will combine the words (adjectives) from each corpus file in corpora
+# into one flat list.
 def make_base_corpus(corpora):
-    print('corpora', corpora)
     results = list()
     for corpus_fp in corpora:
         adjectives = read_json(corpus_fp)
         for tup in adjectives:
             results.append(tup[1])
+    #flatten data at the end
     return sum(results, [])
+
+
+# This will remove tropes found in the file provided in the second parameter
+# from the file provided from the first and return that as a new collection.
+def filter_tropes(target, other):
+    target_tropes = read_json(target)
+    other_tropes = read_json(other)
+
+    other_trope_names = [t[0] for t in other_tropes]
+    result = [t for t in target_tropes if t[0] not in other_trope_names]
+    return result
 
 
 if __name__ == "__main__":
@@ -216,8 +229,9 @@ if __name__ == "__main__":
     elif args.command == 'make_base_corpus':
         corpus = make_base_corpus(args.source)
         write_json(args.dest, corpus)
-    elif args.command == 'compute_ll':
-        todo = True
+    elif args.command == 'filter_tropes':
+        filtered = filter_tropes(args.source[0], args.source[1])
+        write_json(args.dest, filtered)
     else:
         print('Unknown Command')
 
