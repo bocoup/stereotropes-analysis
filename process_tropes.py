@@ -1,6 +1,7 @@
 import tagger
 import json
 import os
+from collections import OrderedDict
 
 def write_json(path, data):
     output = open(path, 'w')
@@ -88,6 +89,46 @@ def extract_film_categories(path):
 
     return categories
 
+def build_trope_count_per_decade(tropes):
+    decades = [
+        'Films of the 1920s',
+        'Films of the 1930s',
+        'Films of the 1940s',
+        'Films of the 1950s',
+        'Films of the 1960s',
+        'Films of the 1970s',
+        'Films of the 1980s',
+        'Films of the 1990s',
+        'Films of the 2000s',
+        'Films of the 2010s'
+    ]
+
+    for trope_name in tropes['values']:
+        decade_counts = {}
+        trope = tropes['values'][trope_name]
+
+        # count the decade occurace
+        for film_category in trope['categories']:
+            if film_category in decades:
+                if film_category in decade_counts:
+                    decade_counts[film_category] += 1
+                else:
+                    decade_counts[film_category] = 1
+
+        # fill in gaps with zeroes for decades that
+        # were not mentioned and convert the whole
+        # thing to an ordered list.
+        decade_counts_list = list()
+        for decade in decades:
+            if decade not in decade_counts:
+                decade_counts[decade] = 0
+            decade_counts_list.append((decade, decade_counts[decade]))
+
+        tropes['values'][trope_name]['decade_counts'] = decade_counts_list
+
+    return tropes
+
+
 def extract_trope_films(path):
     film_roles = read_json(path)
     tropes = {
@@ -126,6 +167,7 @@ def extract_trope_films(path):
                 'categories_unique': 1
             }
 
+    tropes = build_trope_count_per_decade(tropes)
     return tropes
 
 def make_base_corpus(corpora):
