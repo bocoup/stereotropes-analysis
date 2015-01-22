@@ -1,0 +1,23 @@
+{
+  "name": "tvtrope-sketches",
+  "version": "0.0.0",
+  "homepage": "https://github.com/bocoup/tvtropes-vis",
+  "authors": [
+    "Bocoup"
+  ],
+  "description": "TV Tropes - visual experiments",
+  "main": "n",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "d3": "~3.5.3",
+    "jquery": "*"
+  }
+}

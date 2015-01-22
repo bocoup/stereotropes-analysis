@@ -1,0 +1,65 @@
+<html>
+<head>
+  <title>Film tropes over time</title>
+
+  <style>
+
+    body {
+      font: 10px sans-serif;
+    }
+
+    .axis path,
+    .axis line {
+      fill: none;
+      stroke: #000;
+      shape-rendering: crispEdges;
+    }
+
+    .x.axis path {
+      display: none;
+    }
+
+    .trope {
+      fill: none;
+      stroke: lightgrey;
+      stroke-width: 1.5px;
+    }
+    .trope.selected {
+      stroke: red;
+      z-index: 9000;
+    }
+
+    .viz {
+      float:left;
+      display: inline-block;
+      position: fixed;
+    }
+    ul {
+      float:left;
+      display: inline-block;
+      margin-left: 980;
+    }
+    ul li {
+      cursor: pointer;
+    }
+    ul li:hover {
+      color: red;
+    }
+
+    </style>
+
+</head>
+<body>
+
+  <div class="viz">
+  </div>
+
+  <ul class="list">
+
+  </ul>
+
+  <script type="text/javascript" src="bower_components/d3/d3.min.js"></script>
+  <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+  <script type="text/javascript" src="sketch.js"></script>
+</body>
+</html>
