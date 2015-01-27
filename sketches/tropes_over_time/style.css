@@ -19,7 +19,7 @@
   stroke-width: 1.5px;
 }
 .trope.selected {
-  stroke: red;
+  stroke: black;
   z-index: 9000;
 }
 
@@ -29,6 +29,18 @@
   position: fixed;
 }*/
 
+.y.axis .tick line {
+  fill: none;
+  stroke: #ddd;
+}
+
+.y.axis .label {
+  text-anchor: end;
+}
+.tropelist {
+  height: 500px;
+  overflow-y: scroll;
+}
 ul.list {
   float:left;
   display: inline-block;

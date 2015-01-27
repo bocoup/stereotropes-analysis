@@ -14,6 +14,10 @@ $(function() {
     }, start);
   };
 
+  var sorter = function(a, b) {
+    return a.name > b.name ? 1 : (a.name < b.name ? -1 : 0);
+  };
+
   var chartNode = d3.select('.visContainer');
   var subset = null;
 
@@ -66,7 +70,7 @@ $(function() {
         el: $('.list')[0],
         template: $('#tmp-tropes').text(),
         data: {
-          tropes : tropes.values,
+          tropes : tropes.values.sort(sorter),
           format: function(name) {
             return name.split(/(?=[A-Z])/).join(" ");
           }
@@ -79,8 +83,10 @@ $(function() {
         // filter the original data
         var subset = tropes.values.filter(function(trope) {
           return trope.films_count > val;
-        });
+        }).sort(sorter);
+
         tropeList.set('tropes', subset);
+        chart.highlight(null);
       });
 
       // filter tropes by decade_counts_diff
@@ -89,8 +95,9 @@ $(function() {
         // filter the original data
         var subset = tropes.values.filter(function(trope) {
           return trope.decade_counts_diff > val;
-        });
+        }).sort(sorter);
         tropeList.set('tropes', subset);
+        chart.highlight(null);
       });
 
       tropeList.observe('tropes', function(data) {
@@ -105,6 +112,7 @@ $(function() {
       selectors.observe('selectedFormat', function(format) {
         chart.format(format);
         if (subset) chart.draw(subset);
+        chart.highlight(null);
       });
     });
   });
