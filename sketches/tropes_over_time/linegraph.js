@@ -50,7 +50,10 @@ d3.chart("LineGraph", {
     this.axes = {
       x : d3.svg.axis()
         .scale(this.scales.x)
-        .orient('bottom'),
+        .orient('bottom')
+        .tickFormat(function(d) {
+          return d.substring(13,19);
+        }),
       y : d3.svg.axis()
         .scale(this.scales.y)
         .orient('left')
