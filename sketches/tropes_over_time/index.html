@@ -12,17 +12,17 @@
     <div style="position:fixed; top: 0; width: 90%; z-index: 100; background-color: white">
       <div class="row filters">
 
-        <div class="col-md-1">
+        <div class="col-md-3" style="padding:0">
           <div class="genderSelector">
 
           </div>
         </div>
 
-        <div class="col-md-5">
+        <div class="col-md-4">
           <div class="occuranceSelector"></div>
         </div>
 
-        <div class="col-md-5">
+        <div class="col-md-4">
           <div class="uniqueFilmSelector"></div>
         </div>
 
@@ -64,26 +64,34 @@
 
   <script type="text/template" id="tmp-range">
     <h4>{{title}} {{selectedOccurance}}</h4>
-    <input value={{selectedOccurance}} class="col-md-4" id="{{id}}" type="range" min="{{min}}" max="{{max}}" step="{{step}}" />
+    <input value={{selectedOccurance}} id="{{id}}" type="range" min="{{min}}" max="{{max}}" step="{{step}}" />
   </script>
 
   <script type="text/template" id="tmp-selectors">
+    <div class="col-md-4">
     <h4>Gender</h4>
-    <select value='{{selectedGender}}'>
-      {{#each genders}}
-        <option>{{this}}</option>
-      {{/each}}
-    </select>
+      <select value='{{selectedGender}}'>
+        {{#each genders}}
+          <option>{{this}}</option>
+        {{/each}}
+      </select>
+    </div>
+    <div class="col-md-4">
+      <h4>Format</h4>
 
-    <h4>Format</h4>
-
-    <select value='{{selectedFormat}}'>
-      {{#each formats}}
-        <option>{{this}}</option>
-      {{/each}}
-    </select>
+      <select value='{{selectedFormat}}'>
+        {{#each formats}}
+          <option>{{this}}</option>
+        {{/each}}
+      </select>
+    </div>
+    <div class="col-md-3">
+      <h4>Area?</h4>
+      <input type='checkbox' checked='{{isArea}}'>
+    </div>
   </script>
 
+  <script type="text/javascript" src="utils.js"></script>
   <script type="text/javascript" src="linegraph.js"></script>
   <script type="text/javascript" src="app.js"></script>
   <!-- <script type="text/javascript" src="sketch.js"></script> -->

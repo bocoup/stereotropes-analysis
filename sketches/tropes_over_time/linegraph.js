@@ -12,15 +12,12 @@ var decades = [
   'Films of the 2010s'
 ];
 
-d3.chart("LineGraph", {
-
+d3.chart("GraphBase", {
   initialize: function(options) {
-
-    this.format(options.format || 'total');
-    this.total_counts = []; // total counts by decade
+    this.format(options.format || 'total', options.formatRanges);
 
     this.margin = {
-      top: 50, right: 20, bottom: 30, left: 50
+      top: 20, right: 20, bottom: 30, left: 50
     };
     this.width(options.width - this.margin.left - this.margin.right);
     this.height(options.height - this.margin.top - this.margin.bottom);
@@ -48,7 +45,7 @@ d3.chart("LineGraph", {
         .attr("class", "circles")
     };
 
-    this.bases.axes.ylabel = this.bases.axes.y.append("text")
+   this.bases.axes.ylabel = this.bases.axes.y.append("text")
       .attr("transform", "rotate(-90)")
       .classed("label", true)
       .attr("y", 10)
@@ -79,29 +76,220 @@ d3.chart("LineGraph", {
         .tickSize(-this.width())
     };
 
-
     var chart = this;
+
     this.getX = function(d, idx) {
-      return chart.scales.x(d[0]);
+      return d[0];
     };
 
     this.getY = function(d, idx) {
-      if (chart.format() === 'total') return chart.scales.y(d[1]);
-      if (chart.format() === 'decade') {
-        return chart.scales.y(d[1] / chart.total_counts[idx][1]);
+      if (chart.format() === 'total') {
+        return d[1];
       }
-      if (chart.format() === 'trope') return chart.scales.y(d[1] / chart.total_counts[d[2]]);
-
-      return chart.scales.y(d[1]);
+      if (chart.format() === 'decade') {
+        return d[1] / chart.formatRange().totals[idx][1];
+      }
+      if (chart.format() === 'trope') {
+        return d[1] / chart.formatRange().totals[d[2]];
+      }
     };
-
-    this.line = d3.svg.line()
-      // .interpolate("cardinal")
-      .x(this.getX)
-      .y(this.getY);
 
     // render x axis (it will never change)
     this.bases.axes.x.call(this.axes.x);
+
+  },
+
+  // Displaying values. Options are:
+  // total - raw counts
+  // decade - this tropes utilization over that decade across all tropes
+  // trope - this tropes utilization in that decade over time
+  // ranges - object containing all three , their totals (if they exist)
+  //   and a range for em.
+  format: function(name, ranges) {
+    if (arguments.length) {
+      this._format = name;
+      if (ranges) {
+        this._ranges = ranges;
+      }
+      return this;
+    } else {
+      return this._format;
+    }
+  },
+
+  formatRange: function(name) {
+    if (arguments.length) {
+      return this._ranges[name];
+    } else {
+      return this._ranges[this._format];
+    }
+  },
+
+  width: function(width) {
+    if (arguments.length) {
+      this._width = width;
+      return this;
+    } else {
+      return this._width;
+    }
+  },
+
+  height: function(height) {
+    if (arguments.length) {
+      this._height = height;
+      return this;
+    } else {
+      return this._height;
+    }
+  },
+
+  transform: function(data) {
+    var chart = this;
+    var min = 0;
+
+    // pin the y domain to the current format
+    this.scales.y.domain(this.formatRange().range);
+
+    // update y axis. X is fixed, because all decades.
+    this.bases.axes.y.call(this.axes.y);
+
+    // adjust label on y axis
+
+    if (chart.format() === 'total') {
+      this.bases.axes.ylabel.text("Total Count per Decade");
+    }
+    if (chart.format() === 'decade') {
+      this.bases.axes.ylabel.text("% of Total Trope Occurance in Decade");
+    }
+    if (chart.format() === 'trope') {
+      this.bases.axes.ylabel.text("% of Total Trope Occurance Over Time");
+    }
+
+    return data;
+  }
+
+
+});
+
+d3.chart("GraphBase").extend("AreaGraph", {
+  initialize: function(options) {
+    var chart = this;
+
+    this.base.classed("areagraph", true);
+
+    this.stack = d3.layout.stack()
+      .offset("expanded")
+      .values(function(d) { return d.decade_counts; })
+      .x(function(d, i) { return chart.getX(d, i); })
+      .y(function(d, i) { return chart.getY(d, i); });
+
+
+    this.area = d3.svg.area()
+      .interpolate("cardinal")
+      .x(function(d, i) {
+        return chart.scales.x(d[0]);
+      })
+      .y0(function(d, i) {
+        return chart.scales.y(d.y0);
+      })
+      .y1(function(d, i) {
+        return chart.scales.y(d.y0 + d.y);
+      });
+
+    this.scales.color = d3.scale.category20b();
+    this.layer('layers', this.bases.paths, {
+      dataBind: function(data) {
+        var chart = this.chart();
+        data = chart.stack(data);
+
+        // update scales... this sucks
+        var max = data.reduce(function(prev, current, index, array) {
+          var trope = current.name;
+          var y = d3.max(current.decade_counts, function(m, idx) {
+            return m.y0 + m.y;
+          });
+          var x = d3.max([prev, y]);
+          return x;
+        }, 0);
+
+        chart.scales.y.domain([0, max]);
+
+        return this.selectAll('path')
+          .data(data, function(d) {
+            return d.name;
+          });
+      },
+      insert: function() {
+        var chart = this.chart();
+        return this.append('path')
+          .attr("class", "layer")
+          .attr("transform", "translate("+ chart.scales.x.rangeBand()/2 +","+ 0 +")");
+      },
+      events: {
+        enter: function() {
+          var chart = this.chart();
+
+          this.style("fill", function(d, i) {
+            return chart.scales.color(i);
+          }).attr("trope", function(d) {
+            return d.name;
+          }).datum(function(d) {
+            return d.decade_counts;
+          })
+          .attr("d", chart.area);
+        },
+        update: function() {
+          var chart = this.chart();
+          // this.attr("d", function(d)  {
+          //   return chart.area(d.decade_counts);
+          // })
+          this.datum(function(d) {
+            return d.decade_counts;
+          })
+          .attr("d", chart.area);
+        },
+        exit: function() {
+          this.remove();
+        }
+      }
+    });
+  },
+
+  highlight: function(name) {
+    var chart = this;
+    if (this._currentlySelected) {
+      this._currentlySelected.classed("selected", false);
+    }
+
+    if (name !== null) {
+      var p = this.bases.paths.select("path[trope=" + name +"]")
+        .classed("selected", true)
+        .moveToFront();
+
+      this._currentlySelected = p;
+      // chart.layer('circles').draw(p.datum());
+      // chart.layer('circle-labels').draw(p.datum());
+    } else {
+      this._currentlySelected = null;
+      // chart.layer('circles').draw([]);
+      // chart.layer('circle-labels').draw([]);
+    }
+    return this;
+
+  }
+
+});
+
+d3.chart("GraphBase").extend("LineGraph", {
+
+  initialize: function(options) {
+    var chart = this;
+
+    this.base.classed("linegraph", true);
+    this.line = d3.svg.line()
+      .interpolate("cardinal")
+      .x(function(d,i) { return chart.scales.x(chart.getX(d,i)); })
+      .y(function(d,i) { return chart.scales.y(chart.getY(d,i)); });
 
     this.layer('paths', this.bases.paths, {
       dataBind: function(data) {
@@ -158,8 +346,11 @@ d3.chart("LineGraph", {
         events: {
           update : function(d) {
             var chart = this.chart();
-            this.attr('cx', chart.getX)
-              .attr('cy', chart.getY)
+            this.attr('cx', function(d, i) {
+              return chart.scales.x(chart.getX(d,i));
+            }).attr('cy', function(d, i) {
+              return chart.scales.y(chart.getY(d,i));
+            })
               .attr('r', 5);
           },
           exit: function() {
@@ -187,16 +378,18 @@ d3.chart("LineGraph", {
         events: {
           update : function(d) {
             var chart = this.chart();
-            this.attr('x', chart.getX)
+            this.attr('x', function(d, i) {
+              return chart.scales.x(chart.getX(d,i));
+            })
             .attr('y', function(d, i) {
-              return chart.getY(d, i) - 10;
+              return chart.scales.y(chart.getY(d, i)) - 10;
             })
             .attr('text-anchor', 'middle')
             .text(function(d, i) {
               if (chart.format() === 'total') {
-                return Math.round(chart.scales.y.invert(chart.getY(d, i)));
+                return Math.round(chart.getY(d, i));
               } else {
-                return d3.format('0%')(chart.scales.y.invert(chart.getY(d, i)));
+                return d3.format('0.1%')(chart.getY(d, i));
               }
             });
           },
@@ -205,19 +398,6 @@ d3.chart("LineGraph", {
           }
         }
       });
-  },
-
-  // Displaying values. Options are:
-  // total - raw counts
-  // decade - this tropes utilization over that decade across all tropes
-  // trope - this tropes utilization in that decade over time
-  format: function(name) {
-    if (arguments.length) {
-      this._format = name;
-      return this;
-    } else {
-      return this._format;
-    }
   },
 
   highlight: function(name) {
@@ -240,94 +420,6 @@ d3.chart("LineGraph", {
       chart.layer('circle-labels').draw([]);
     }
     return this;
-  },
-
-
-
-  transform: function(data) {
-    var chart = this;
-    var min = 0;
-
-    // aggregate by decade [[decade, totalForDecade], ...]
-    if (this.format() === 'decade') {
-      chart.total_counts = [];
-      decades.forEach(function(decade) {
-        chart.total_counts.push([decade, 0]);
-      });
-
-      data.forEach(function(d) {
-        d.decade_counts.forEach(function(m, i) {
-          chart.total_counts[i][1] += m[1];
-        });
-      });
-    }
-
-    // aggregate by trope
-    if (this.format() === 'trope') {
-      chart.total_counts = {};
-      data.forEach(function(d) {
-        if (chart.total_counts[d.name]) {
-          chart.total_counts[d.name] += d.films_count;
-        } else {
-          chart.total_counts[d.name] = d.films_count;
-        }
-      });
-    }
-
-    var max = data.reduce(function(prev, current, index, array) {
-      var trope = current.name;
-      var y = d3.max(current.decade_counts, function(m, idx) {
-        if (chart.format() === 'total') {
-          return m[1];
-        }
-        if (chart.format() === 'decade') {
-          return m[1] / chart.total_counts[idx][1];
-        }
-        if (chart.format() === 'trope') {
-          return m[1] / chart.total_counts[trope];
-        }
-      });
-      var x = d3.max([prev, y]);
-      return x;
-    }, 0);
-
-    this.scales.y.domain([min,max]);
-
-    // update y axis. X is fixed, because all decades.
-    this.bases.axes.y.call(this.axes.y);
-
-    // adjust label on y axis
-
-    if (chart.format() === 'total') {
-      this.bases.axes.ylabel.text("Total Count per Decade");
-    }
-    if (chart.format() === 'decade') {
-      this.bases.axes.ylabel.text("% of Total Trope Occurance in Decade");
-    }
-    if (chart.format() === 'trope') {
-      this.bases.axes.ylabel.text("% of Total Trope Occurance Over Time");
-    }
-
-    return data;
-
-  },
-
-  width: function(width) {
-    if (arguments.length) {
-      this._width = width;
-      return this;
-    } else {
-      return this._width;
-    }
-  },
-
-  height: function(height) {
-    if (arguments.length) {
-      this._height = height;
-      return this;
-    } else {
-      return this._height;
-    }
   }
 
 });

@@ -13,16 +13,22 @@
   display: none;
 }
 
-.trope {
+
+.linegraph .trope {
   fill: none;
   stroke: lightgrey;
   stroke-width: 1.5px;
 }
-.trope.selected {
+.linegraph .trope.selected {
   stroke: black;
   z-index: 9000;
 }
 
+.areagraph .layer.selected {
+  fill-opacity: 0.5;
+  stroke: #333;
+  stroke-width: 1px;
+}
 /*.viz {
   float:left;
   display: inline-block;
