@@ -1,0 +1,47 @@
+.filters {
+  margin-bottom: 20px;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+  display: none;
+}
+
+.trope {
+  fill: none;
+  stroke: lightgrey;
+  stroke-width: 1.5px;
+}
+.trope.selected {
+  stroke: red;
+  z-index: 9000;
+}
+
+/*.viz {
+  float:left;
+  display: inline-block;
+  position: fixed;
+}*/
+
+ul.list {
+  float:left;
+  display: inline-block;
+  padding-left: 0px;
+  list-style-type: none;
+}
+ul.list li {
+  cursor: pointer;
+  background-color: #eaeaea;
+  margin-bottom: 3px;
+  padding: 2px;
+  padding-left: 10px;
+}
+ul li:hover {
+  color: red;
+}

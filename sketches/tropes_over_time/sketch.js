@@ -40,7 +40,7 @@ $(function() {
 
   var total_counts = [];
   var line = d3.svg.line()
-    .interpolate("cardinal")
+    // .interpolate("cardinal")
     .x(function(d, i) { return x(d[0]); })
     .y(function(d, i) { return y(d[1] / total_counts[i][1]); });
 
@@ -85,7 +85,6 @@ $(function() {
       .style("text-anchor", "end")
       .text("decade");
 
-    var path_selected = svg.append("g");
     var paths_g = svg.append("g");
 
     var binding = paths_g.selectAll("path")

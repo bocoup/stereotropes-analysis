@@ -18,6 +18,9 @@
   ],
   "dependencies": {
     "d3": "~3.5.3",
-    "jquery": "*"
+    "jquery": "*",
+    "ractive": "~0.6.1",
+    "bootstrap": "~3.3.2",
+    "d3.chart": "~0.2.1"
   }
 }

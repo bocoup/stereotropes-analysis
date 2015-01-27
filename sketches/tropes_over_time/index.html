@@ -1,65 +1,84 @@
-<html>
-<head>
+<!DOCTYPE html>
+<html lang="en">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Film tropes over time</title>
-
-  <style>
-
-    body {
-      font: 10px sans-serif;
-    }
-
-    .axis path,
-    .axis line {
-      fill: none;
-      stroke: #000;
-      shape-rendering: crispEdges;
-    }
-
-    .x.axis path {
-      display: none;
-    }
-
-    .trope {
-      fill: none;
-      stroke: lightgrey;
-      stroke-width: 1.5px;
-    }
-    .trope.selected {
-      stroke: red;
-      z-index: 9000;
-    }
-
-    .viz {
-      float:left;
-      display: inline-block;
-      position: fixed;
-    }
-    ul {
-      float:left;
-      display: inline-block;
-      margin-left: 980;
-    }
-    ul li {
-      cursor: pointer;
-    }
-    ul li:hover {
-      color: red;
-    }
-
-    </style>
-
+  <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.css"/>
+  <link rel="stylesheet" type="text/css" href="style.css"/>
 </head>
 <body>
 
-  <div class="viz">
+  <div class="container">
+
+    <div style="position:fixed; top: 0; width: 90%; z-index: 100; background-color: white">
+      <div class="row filters">
+
+        <div class="col-md-1">
+          <h4>Gender <span id="gender"></span></h4>
+          <div class="genderSelector">
+
+          </div>
+        </div>
+
+        <div class="col-md-5">
+          <div class="occuranceSelector"></div>
+        </div>
+
+        <div class="col-md-5">
+          <div class="uniqueFilmSelector"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="row bottom" style="margin-top: 50px">
+      <div class="col-md-3">
+
+        <h4>Tropes:</h4>
+        <ul class="list">
+        </ul>
+
+      </div>
+
+      <div class="viz col-md-9">
+        <h4>Vis</h4>
+        <div class="visContainer">
+        </div>
+      </div>
+
+    </div>
   </div>
 
-  <ul class="list">
-
-  </ul>
-
   <script type="text/javascript" src="bower_components/d3/d3.min.js"></script>
+  <script type="text/javascript" src="bower_components/d3.chart/d3.chart.min.js"></script>
   <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
-  <script type="text/javascript" src="sketch.js"></script>
+  <script type="text/javascript" src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="bower_components/ractive/ractive.js"></script>
+
+  <script type="text/template" id="tmp-tropes">
+    {{#each tropes}}
+      <li class="col-md-12" on-mouseover="select">
+        {{format(name)}}
+      </li>
+    {{/each}}
+  </script>
+
+  <script type="text/template" id="tmp-range">
+    <h4>{{title}} {{selectedOccurance}}</h4>
+    <input value={{selectedOccurance}} class="col-md-4" id="{{id}}" type="range" min="{{min}}" max="{{max}}" step="{{step}}" />
+  </script>
+
+  <script type="text/template" id="tmp-gender">
+    <select value='{{selectedGender}}'>
+      {{#each genders}}
+        <option>{{this}}</option>
+      {{/each}}
+    </select>
+  </script>
+
+  <script type="text/javascript" src="linegraph.js"></script>
+  <script type="text/javascript" src="app.js"></script>
+  <!-- <script type="text/javascript" src="sketch.js"></script> -->
 </body>
 </html>
