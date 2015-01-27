@@ -13,7 +13,6 @@
       <div class="row filters">
 
         <div class="col-md-1">
-          <h4>Gender <span id="gender"></span></h4>
           <div class="genderSelector">
 
           </div>
@@ -68,9 +67,18 @@
     <input value={{selectedOccurance}} class="col-md-4" id="{{id}}" type="range" min="{{min}}" max="{{max}}" step="{{step}}" />
   </script>
 
-  <script type="text/template" id="tmp-gender">
+  <script type="text/template" id="tmp-selectors">
+    <h4>Gender</h4>
     <select value='{{selectedGender}}'>
       {{#each genders}}
+        <option>{{this}}</option>
+      {{/each}}
+    </select>
+
+    <h4>Format</h4>
+
+    <select value='{{selectedFormat}}'>
+      {{#each formats}}
         <option>{{this}}</option>
       {{/each}}
     </select>

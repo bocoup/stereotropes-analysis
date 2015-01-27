@@ -1,9 +1,10 @@
 $(function() {
-    var gender = new Ractive({
+  var selectors = new Ractive({
     el: $('.genderSelector')[0],
-    template: $('#tmp-gender').text(),
+    template: $('#tmp-selectors').text(),
     data: {
-      genders : ['male','female']
+      genders : ['male','female'],
+      formats: ['total', 'decade', 'trope']
     }
   });
 
@@ -14,12 +15,15 @@ $(function() {
   };
 
   var chartNode = d3.select('.visContainer');
+  var subset = null;
 
   var chart = chartNode.chart('LineGraph', {
-    height: 600, width: $(chartNode.node()).width()
+    format: 'trope',
+    height: 600,
+    width: $(chartNode.node()).width()
   });
 
-  gender.observe('selectedGender', function(g) {
+  selectors.observe('selectedGender', function(g) {
     $.ajax('../../data/results/'+g+'_film_tropes.json').then(function(tropes) {
 
       //===== find min and max film count
@@ -90,11 +94,17 @@ $(function() {
       });
 
       tropeList.observe('tropes', function(data) {
+        subset = data;
         chart.draw(data);
       });
 
       tropeList.on('select', function(event) {
         chart.highlight(event.context.name);
+      });
+
+      selectors.observe('selectedFormat', function(format) {
+        chart.format(format);
+        if (subset) chart.draw(subset);
       });
     });
   });

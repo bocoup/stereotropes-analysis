@@ -15,6 +15,10 @@ var decades = [
 d3.chart("LineGraph", {
 
   initialize: function(options) {
+
+    this.format(options.format || 'total');
+    this.total_counts = []; // total counts by decade
+
     this.margin = {
       top: 20, right: 20, bottom: 30, left: 50
     };
@@ -63,7 +67,16 @@ d3.chart("LineGraph", {
     this.line = d3.svg.line()
       // .interpolate("cardinal")
       .x(function(d, i) { return chart.scales.x(d[0]); })
-      .y(function(d, i) { return chart.scales.y(d[1]); }); // try to divide by total_counts[i][1]
+      .y(function(d, idx) {
+
+        if (chart.format() === 'total') return chart.scales.y(d[1]);
+        if (chart.format() === 'decade') {
+          return chart.scales.y(d[1] / chart.total_counts[idx][1]);
+        }
+        if (chart.format() === 'trope') return chart.scales.y(d[1] / chart.total_counts[d[2]]);
+
+        return chart.scales.y(d[1]);
+      });
 
     // render x axis (it will never change)
     this.bases.axes.x.call(this.axes.x);
@@ -82,11 +95,16 @@ d3.chart("LineGraph", {
           .attr("transform", "translate("+ chart.scales.x.rangeBand()/2 +","+ 0 +")");
       },
       events: {
-        enter: function() {
+        "enter": function() {
           var chart = this.chart();
           this.attr("trope", function(d) {
             return d.name;
           }).datum(function(d) {
+            return d.decade_counts;
+          }).attr("d", chart.line);
+        },
+        "update": function() {
+          this.datum(function(d) {
             return d.decade_counts;
           }).attr("d", chart.line);
         },
@@ -96,6 +114,19 @@ d3.chart("LineGraph", {
       }
 
     });
+  },
+
+  // Displaying values. Options are:
+  // total - raw counts
+  // decade - this tropes utilization over that decade across all tropes
+  // trope - this tropes utilization in that decade over time
+  format: function(name) {
+    if (arguments.length) {
+      this._format = name;
+      return this;
+    } else {
+      return this._format;
+    }
   },
 
   highlight: function(name) {
@@ -111,15 +142,53 @@ d3.chart("LineGraph", {
   },
 
   transform: function(data) {
+    var chart = this;
     var min = 0;
+
+    // aggregate by decade [[decade, totalForDecade], ...]
+    if (this.format() === 'decade') {
+      chart.total_counts = [];
+      decades.forEach(function(decade) {
+        chart.total_counts.push([decade, 0]);
+      });
+
+      data.forEach(function(d) {
+        d.decade_counts.forEach(function(m, i) {
+          chart.total_counts[i][1] += m[1];
+        });
+      });
+    }
+
+    // aggregate by trope
+    if (this.format() === 'trope') {
+      chart.total_counts = {};
+      data.forEach(function(d) {
+        if (chart.total_counts[d.name]) {
+          chart.total_counts[d.name] += d.films_count;
+        } else {
+          chart.total_counts[d.name] = d.films_count;
+        }
+      });
+    }
+
     var max = data.reduce(function(prev, current, index, array) {
+      var trope = current.name;
       var y = d3.max(current.decade_counts, function(m, idx) {
-        return m[1]; // / total_counts[idx][1];
+        if (chart.format() === 'total') {
+          return m[1];
+        }
+        if (chart.format() === 'decade') {
+          return m[1] / chart.total_counts[idx][1];
+        }
+        if (chart.format() === 'trope') {
+          return m[1] / chart.total_counts[trope];
+        }
       });
       var x = d3.max([prev, y]);
       return x;
     }, 0);
 
+    console.log(min, max);
     this.scales.y.domain([min,max]);
 
     // update y axis. X is fixed, because all decades.

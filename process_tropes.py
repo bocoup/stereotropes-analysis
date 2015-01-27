@@ -141,7 +141,7 @@ def build_trope_count_per_decade(tropes):
         min_max = [float("inf"), 0]
         for decade in decades:
             if decade not in decades_of_2000:
-                decade_counts_list.append((decade, decade_counts[decade]))
+                decade_counts_list.append((decade, decade_counts[decade], trope_name))
 
                 # assemble biggest diff between values
                 if (decade_counts[decade] < min_max[0]):
