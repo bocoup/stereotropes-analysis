@@ -178,9 +178,13 @@ d3.chart("GraphBase").extend("AreaGraph", {
     this.base.classed("areagraph", true);
 
     this.stack = d3.layout.stack()
-      .offset("expanded")
+      .offset("wiggle")
       .values(function(d) { return d.decade_counts; })
-      .x(function(d, i) { return chart.getX(d, i); })
+      .x(function(d, i) {
+        // to allow wiggle, the x function needs to return a number.
+        //return chart.getX(d, i);
+        return i;
+      })
       .y(function(d, i) { return chart.getY(d, i); });
 
 
