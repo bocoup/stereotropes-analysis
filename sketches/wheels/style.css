@@ -1,0 +1,31 @@
+.container {
+  margin-left: 20px;
+  margin-right: 20px;
+}
+.filterSelector h3 {
+  display: inline-block;
+  float:left;
+  width: 3.84%;
+  text-align: center;
+  padding-bottom: 5px;
+}
+.filterSelector h3.selected {
+  color: white;
+  background-color: #eaeaea;
+}
+
+.tropelist {
+}
+
+.list {
+  display: inline-flex;
+
+}
+.list .lettergroup {
+  display : flex;
+}
+.list .lettergroup .trope {
+  display : inline-block;
+  float: left;
+  width: 300px;
+}
