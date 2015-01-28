@@ -19,12 +19,19 @@
 
 .list {
   display: inline-flex;
-
 }
+
 .list .lettergroup {
   display : flex;
 }
+
+.list .lettergroup h2.keyletter {
+  padding: 10px;
+  margin-right: 10px;
+  background-color: #eee;
+}
 .list .lettergroup .trope {
+  margin-top: 20px;
   display : inline-block;
   float: left;
   width: 300px;

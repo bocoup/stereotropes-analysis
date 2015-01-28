@@ -20,7 +20,6 @@
 
       </div>
     </div>
-
     <hr>
 
     <div class="bottom" style="margin-top: 60px; padding-left: 20px;">
@@ -50,6 +49,9 @@
   <script type="text/template" id="tmp-tropes">
     {{#each tropes}}
       <div class="lettergroup" id="{{this.letter}}-letter">
+
+        <h2 class="keyletter">{{this.letter}}</h2>
+        <br>
         {{#values}}
           <div class="trope">
             <h4>{{format(name)}}</h4>
@@ -60,6 +62,7 @@
             </ul>
           </div>
         {{/values}}
+
       </div>
     {{/each}}
   </script>
@@ -81,7 +84,9 @@
       </div>
       <div class="col-md-12">
         <input value={{selectedLetter}} id="letterRange" type="range" min="97" max="122" step="1" />
+      <aside>Use <code>shift + mousescroll</code> to scroll through, or use the slider above to jump to any letter.</aside>
       </div>
+
     </div>
   </script>
   <script type="text/javascript" src="util.js"></script>
