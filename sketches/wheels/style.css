@@ -30,9 +30,20 @@
   margin-right: 10px;
   background-color: #eee;
 }
+
 .list .lettergroup .trope {
   margin-top: 20px;
   display : inline-block;
   float: left;
   width: 300px;
+}
+
+.list .lettergroup .trope ul {
+  list-style-type: none;
+  padding: 0;
+
+}
+
+.list .lettergroup .trope li {
+  font-size: 1.4em;
 }

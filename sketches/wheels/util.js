@@ -9,9 +9,9 @@ Util = {
     return map;
   },
 
-  tropeMap: function(tropes) {
+  tropeMap: function(tropes, adjRankings) {
     var map = {};
-
+    var max = 0;
     tropes[0].forEach(function(trope) {
 
       // get first letter
@@ -20,6 +20,25 @@ Util = {
         name : trope[0],
         values: trope[1]
       };
+
+      // for each adjective in the list, append the
+      // score from the adjective ranking
+      item.values = _.unique(item.values);
+      item.values.forEach(function(adjective, i) {
+
+        adjective = adjective.toLowerCase();
+        var score = adjRankings[adjective][3];
+        if (adjRankings[adjective]) {
+          item.values[i] = [adjective, score];
+        } else {
+          item.values[i] = [adjective, -2];
+        }
+        max = Math.max(score, max);
+      });
+
+      item.values = _.sortBy(item.values, function(adj) {
+        return -adj[1];
+      });
       if (map[firstLetter]) {
         map[firstLetter].push(item);
       } else {
@@ -38,7 +57,7 @@ Util = {
       }
     }
 
-    console.log(arr);
+    console.log(max);
     return arr;
   }
 };
