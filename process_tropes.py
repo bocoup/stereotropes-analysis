@@ -1,6 +1,7 @@
 import tagger
 import json
 import os
+from collections import OrderedDict
 
 def write_json(path, data):
     output = open(path, 'w')
@@ -88,6 +89,72 @@ def extract_film_categories(path):
 
     return categories
 
+def build_trope_count_per_decade(tropes):
+    decades = [
+        'Films of the 1920s',
+        'Films of the 1930s',
+        'Films of the 1940s',
+        'Films of the 1950s',
+        'Films of the 1960s',
+        'Films of the 1970s',
+        'Films of the 1980s',
+        'Films of the 1990s',
+        'Films of the 2000s',
+        'Films Of The 2000s-Franchises',
+        'Films of 2000-2004',
+        'Films of 2005-2009',
+        'Films of the 2010s'
+    ]
+
+    decades_of_2000 = [
+        'Films Of The 2000s-Franchises',
+        'Films of 2000-2004',
+        'Films of 2005-2009',
+    ]
+
+    for trope_name in tropes['values']:
+        decade_counts = {}
+        trope = tropes['values'][trope_name]
+
+        # count the decade occurace
+        for film_category in trope['categories']:
+            if film_category in decades:
+                if film_category in decade_counts:
+                    decade_counts[film_category] += 1
+                else:
+                    decade_counts[film_category] = 1
+
+        # fill in gaps with zeroes for decades that
+        # were not mentioned and convert the whole
+        # thing to an ordered list.
+        decade_counts_list = list()
+        for decade in decades:
+            if decade not in decade_counts:
+                decade_counts[decade] = 0
+
+            if decade in decades_of_2000:
+                decade_counts['Films of the 2000s'] += decade_counts[decade]
+                del decade_counts[decade]
+
+
+
+        min_max = [float("inf"), 0]
+        for decade in decades:
+            if decade not in decades_of_2000:
+                decade_counts_list.append((decade, decade_counts[decade], trope_name))
+
+                # assemble biggest diff between values
+                if (decade_counts[decade] < min_max[0]):
+                    min_max[0] = decade_counts[decade]
+                if (decade_counts[decade] > min_max[1]):
+                    min_max[1] = decade_counts[decade]
+
+        tropes['values'][trope_name]['decade_counts_diff'] = min_max[1] - min_max[0]
+        tropes['values'][trope_name]['decade_counts'] = decade_counts_list
+
+    return tropes
+
+
 def extract_trope_films(path):
     film_roles = read_json(path)
     tropes = {
@@ -118,6 +185,7 @@ def extract_trope_films(path):
             tropes['count'] += 1
 
             tropes['values'][trope] = {
+                'name' : trope,
                 'films' : [tup[1]],
                 'films_count' : 1,
                 'films_unique' : 1,
@@ -126,6 +194,8 @@ def extract_trope_films(path):
                 'categories_unique': 1
             }
 
+    tropes = build_trope_count_per_decade(tropes)
+    tropes['values'] = tropes['values'].values()
     return tropes
 
 # This will combine the words (adjectives) from each corpus file in corpora
