@@ -35,11 +35,20 @@ $(function() {
     var scrollToEl = $(anchor);
     if (scrollToEl.size()) {
       $('html,body').stop().animate({
-        scrollLeft: scrollToEl.offset().left
+        scrollLeft: capitalLetter === 'A' ? 0 : scrollToEl.offset().left
       }, 1000);
     }
   });
 
+  var tropeColor = d3.scale.linear()
+    .domain([-1, -0.1, 0.2, 1])
+    .range([
+      "#7b3294",
+      "#c2a5cf",
+      "#a6dba0",
+      "#008837"
+    ]);
+  var scoreForamtter = d3.format("0.2f");
   var tropeList = new Ractive({
     el: $('.list')[0],
     template: $('#tmp-tropes').text(),
@@ -47,6 +56,12 @@ $(function() {
       tropes : [],
       format: function(name) {
         return name.split(/(?=[A-Z])/).join(" ");
+      },
+      formatScore: function(score) {
+        return scoreForamtter(score);
+      },
+      color: function(score) {
+        return tropeColor(score);
       }
     }
   });
@@ -60,7 +75,9 @@ $(function() {
     $.when(getTropeAdjectives, getRanking).done(function(tropes, adjectiveRanking) {
 
       // convert tropes and adjectives to map
-      def.resolve(Util.tropeMap(tropes), Util.rankingMap(adjectiveRanking));
+      adjectiveRanking = Util.rankingMap(adjectiveRanking);
+      tropes = Util.tropeMap(tropes, adjectiveRanking);
+      def.resolve(tropes,adjectiveRanking);
 
     });
 
