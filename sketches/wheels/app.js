@@ -69,15 +69,13 @@ $(function() {
   var getData = function(gender) {
     var def = $.Deferred();
 
-    var getTropeAdjectives = $.ajax('../../data/results/' + gender + '_tropes_adjectives.json');
-    var getRanking = $.ajax('../../data/analysis/' + gender + '_ll.json');
+    var getTropeAdjectives = $.ajax('../../data/analysis/' + gender + '_trope_ll.json');
 
-    $.when(getTropeAdjectives, getRanking).done(function(tropes, adjectiveRanking) {
+    $.when(getTropeAdjectives).done(function(tropes) {
 
       // convert tropes and adjectives to map
-      adjectiveRanking = Util.rankingMap(adjectiveRanking);
-      tropes = Util.tropeMap(tropes, adjectiveRanking);
-      def.resolve(tropes,adjectiveRanking);
+      tropes = Util.tropeMap(tropes);
+      def.resolve(tropes);
 
     });
 

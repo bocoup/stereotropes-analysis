@@ -11,13 +11,12 @@ analyse: analysis_dir log_likelyhood
 analysis_dir:
 	mkdir -p data/analysis
 
-log_likelyhood: data/analysis/male_ll.json data/analysis/female_ll.json
 cluster: data/analysis/female_trope_clusters.json data/analysis/male_trope_clusters.json data/analysis/all_trope_clusters.json
+log_likelyhood: data/analysis/male_ll.json data/analysis/female_ll.json data/analysis/male_trope_ll.json data/analysis/female_trope_ll.json
 
 data/analysis/male_ll.json: data/results/base_corpus.json data/results/male_corpus.json
 	python analyse_data.py --command log_likelyhood --source data/results/male_corpus.json data/results/base_corpus.json --dest $@
-	# touch $@
-
+	touch $@
 data/analysis/female_ll.json: data/results/base_corpus.json data/results/female_corpus.json
 	python analyse_data.py --command log_likelyhood --source data/results/female_corpus.json data/results/base_corpus.json --dest $@
 	# touch $@
@@ -28,7 +27,14 @@ data/analysis/male_trope_clusters.json: data/results/male_tropes_adjectives.json
 	python analyse_data.py --command cluster --source data/results/male_tropes_adjectives.json --dest $@ --num_clusters 20
 data/analysis/all_trope_clusters.json: data/results/male_tropes_adjectives.json data/results/female_tropes_adjectives.json
 	python analyse_data.py --command cluster --source data/results/male_tropes_adjectives.json data/results/female_tropes_adjectives.json --dest $@ --num_clusters 20
+	touch $@
 
+data/analysis/male_trope_ll.json: data/results/base_corpus.json data/results/male_tropes_adjectives.json
+	python analyse_data.py --command trope_log_likelyhood --source data/results/male_tropes_adjectives.json data/results/base_corpus.json --dest $@
+	touch $@
+data/analysis/female_trope_ll.json: data/results/base_corpus.json data/results/female_tropes_adjectives.json
+	python analyse_data.py --command trope_log_likelyhood --source data/results/female_tropes_adjectives.json data/results/base_corpus.json --dest $@
+	touch $@
 
 # Trope extraction
 data/results/female_tropes.json: data/raw/FemaleTropesWithDescription.json
