@@ -23,11 +23,11 @@ data/analysis/female_ll.json: data/results/base_corpus.json data/results/female_
 	# touch $@
 
 data/analysis/female_trope_clusters.json: data/results/female_tropes_adjectives.json
-	python analyse_data.py --command cluster --source data/results/female_tropes_adjectives.json --dest $@
+	python analyse_data.py --command cluster --source data/results/female_tropes_adjectives.json --dest $@ --num_clusters 20
 data/analysis/male_trope_clusters.json: data/results/male_tropes_adjectives.json
-	python analyse_data.py --command cluster --source data/results/male_tropes_adjectives.json --dest $@
+	python analyse_data.py --command cluster --source data/results/male_tropes_adjectives.json --dest $@ --num_clusters 20
 data/analysis/all_trope_clusters.json: data/results/male_tropes_adjectives.json data/results/female_tropes_adjectives.json
-	python analyse_data.py --command cluster --source data/results/male_tropes_adjectives.json data/results/female_tropes_adjectives.json --dest $@
+	python analyse_data.py --command cluster --source data/results/male_tropes_adjectives.json data/results/female_tropes_adjectives.json --dest $@ --num_clusters 20
 
 
 # Trope extraction

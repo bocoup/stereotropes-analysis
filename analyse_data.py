@@ -92,7 +92,7 @@ from sklearn.cluster import KMeans, MiniBatchKMeans
 from sklearn import cluster
 from sklearn.neighbors import kneighbors_graph
 
-def cluster_documents(documents, num_clusters=10, num_terms=20, clust_alg='kmeans', verbose_docs=True):
+def cluster_documents(documents, num_clusters=10, num_terms=30, clust_alg='kmeans', verbose_docs=True):
     '''A document is an object with a tokens attribute where tokens is
         a list of tokens. Documents is a list of these document objects'''
 
@@ -167,6 +167,10 @@ if __name__ == "__main__":
     parser.add_argument('--dest', help='source file', required=True)
     parser.add_argument('--command', help='command to run', required=True)
 
+    #Optional clustering args
+    parser.add_argument('--num_clusters', type=int, help='number of clusters', required=False, default=10)
+
+
     args = parser.parse_args()
 
     if args.command == 'log_likelyhood':
@@ -185,7 +189,7 @@ if __name__ == "__main__":
             docs = [{'source': source_name, 'name': tup[0], 'tokens': tup[1]} for tup in source]
             documents = documents + docs
 
-        results = cluster_documents(documents, 10)
+        results = cluster_documents(documents, args.num_clusters)
         res = {'by_cluster': results[0], 'cluster_description': results[1]}
         write_json(args.dest, res)
     else:
