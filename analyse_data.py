@@ -50,7 +50,7 @@ def compute_LL(source_corpus, background_corpus):
 		results.append((word, count, ll))
 
 	sorted_ll = sorted(results, key=lambda tup: tup[2], reverse=True)
-	pp(sorted_ll[0:20])
+	# pp(sorted_ll[0:20])
 
 	return sorted_ll
 
@@ -100,12 +100,31 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.command == 'log_likelyhood':
-    		# expected input is a json array of tokens (words)
+    	# expected input is a json array of tokens (words)
         source_corpus = read_json(args.source[0])
         background_corpus = read_json(args.source[1])
 
         result = normalize_LL(compute_LL(source_corpus, background_corpus))
         write_json(args.dest, result)
+    if args.command == 'trope_log_likelyhood':
+        # expected input is an array containing tuples
+        tropes_corpus = read_json(args.source[0])
+        background_corpus = read_json(args.source[1])
+
+        for trope in tropes_corpus:
+            trope_name = trope[0]
+            trope_adjectives = trope[1]
+
+            if len(trope_adjectives) > 1:
+
+                ll = compute_LL(trope_adjectives, background_corpus)
+                normalized_ll = normalize_LL(ll)
+
+                trope[1] = normalized_ll
+
+        write_json(args.dest, tropes_corpus)
+
+
     else:
         print('Unknown Command')
 
