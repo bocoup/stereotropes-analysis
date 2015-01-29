@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <script src='bower_components/jquery/dist/jquery.min.js'></script>
+    <script src='bower_components/underscore/underscore-min.js'></script>
+    <script src='bower_components/ractive/ractive.min.js'></script>
+
+  </head>
+
+  <body>
+    <h1>Clusterviewer</h1>
+    <select id='selector'>
+      <option value='all'>all</option>
+      <option value='female'>female</option>
+      <option value='male'>male</option>
+    </select>
+    <div id='container'></div>
+
+    <script id='template' type='text/ractive'>
+      {{#clusters:i}}
+        <div class='cluster'>
+          <h2>Cluster {{i}}</h2>
+
+          <h4>Tropes</h4>
+          <span class='tropes'>
+            {{#each clusterDocs}}
+              <span class='cluster-member'>{{name}} &nbsp; </span>
+            {{/each}}
+          </span>
+
+
+          <h4>Terms</h4>
+          <span class='terms'>
+            {{#clusterTerms:k}}
+              <span class='cluster-terms'>{{clusterTerms[k]}} &nbsp; </span>
+
+            {{/clusterTerms:k}}
+          </span>
+
+        </div>
+      {{/clusters}}
+    </script>
+
+
+    <script src='clusters.js'></script>
+  </body>
+</html>
