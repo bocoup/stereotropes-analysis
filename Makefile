@@ -12,6 +12,7 @@ analysis_dir:
 	mkdir -p data/analysis
 
 log_likelyhood: data/analysis/male_ll.json data/analysis/female_ll.json
+cluster: data/analysis/female_trope_clusters.json data/analysis/male_trope_clusters.json data/analysis/all_trope_clusters.json
 
 data/analysis/male_ll.json: data/results/base_corpus.json data/results/male_corpus.json
 	python analyse_data.py --command log_likelyhood --source data/results/male_corpus.json data/results/base_corpus.json --dest $@
@@ -21,7 +22,12 @@ data/analysis/female_ll.json: data/results/base_corpus.json data/results/female_
 	python analyse_data.py --command log_likelyhood --source data/results/female_corpus.json data/results/base_corpus.json --dest $@
 	# touch $@
 
-
+data/analysis/female_trope_clusters.json: data/results/female_tropes_adjectives.json
+	python analyse_data.py --command cluster --source data/results/female_tropes_adjectives.json --dest $@
+data/analysis/male_trope_clusters.json: data/results/male_tropes_adjectives.json
+	python analyse_data.py --command cluster --source data/results/male_tropes_adjectives.json --dest $@
+data/analysis/all_trope_clusters.json: data/results/male_tropes_adjectives.json data/results/female_tropes_adjectives.json
+	python analyse_data.py --command cluster --source data/results/male_tropes_adjectives.json data/results/female_tropes_adjectives.json --dest $@
 
 
 # Trope extraction
