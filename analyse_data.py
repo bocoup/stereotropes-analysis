@@ -52,14 +52,8 @@ def compute_LL(source_corpus, background_corpus):
         ll = loglike(count, source_len, background_freq[word], bg_len)
         results.append((word, count, ll))
 
-<<<<<<< HEAD
-    sorted_ll = sorted(results, key=lambda tup: tup[2], reverse=True)
-    pp(sorted_ll[0:20])
-=======
-	sorted_ll = sorted(results, key=lambda tup: tup[2], reverse=True)
-	# pp(sorted_ll[0:20])
->>>>>>> 33dcafe8cba89c0101d94833d06ff54dd9593f86
 
+	sorted_ll = sorted(results, key=lambda tup: tup[2], reverse=True)
     return sorted_ll
 
 
