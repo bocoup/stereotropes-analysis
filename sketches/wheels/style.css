@@ -46,4 +46,12 @@
 
 .list .lettergroup .trope li {
   font-size: 1.4em;
+  cursor:pointer;
+}
+
+.list .lettergroup .trope li.selected {
+  color: red;
+}
+.list .lettergroup .trope li:hover {
+  background-color: #eaeaea;
 }

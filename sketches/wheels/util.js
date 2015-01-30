@@ -21,7 +21,6 @@ Util = {
       // score from the adjective ranking
       item.values.forEach(function(adjective, i) {
 
-        console.log(adjective);
         adjective = adjective[0].toLowerCase();
         var score = adjective[3];
 
