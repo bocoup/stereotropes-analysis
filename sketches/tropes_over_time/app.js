@@ -127,7 +127,7 @@ $(function() {
   };
 
   var getData = function(gender, callback) {
-    return $.ajax('../../data/results/' + gender + '_film_tropes.json')
+    return $.ajax('../../data/results/' + gender + '_trope_films.json')
       .then(callback);
   };
 
