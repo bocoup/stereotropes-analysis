@@ -60,11 +60,11 @@ data/results/male_only_tropes.json: data/results/male_tropes.json data/results/u
 # Film extraction
 data/results/female_film_roles.json: data/raw/FemaleTropeMovieRoles.json
 		mkdir -p data/results
-		python process_tropes.py --command extract_films --source $< --dest $@
+		python process_tropes.py --command extract_films --source data/raw/FemaleTropeMovieRoles.json data/raw/FilmSeries.json --dest $@
 		touch $@
 data/results/male_film_roles.json: data/raw/MaleTropeMovieRoles.json
 		mkdir -p data/results
-		python process_tropes.py --command extract_films --source $< --dest $@
+		python process_tropes.py --command extract_films --source data/raw/MaleTropeMovieRoles.json data/raw/FilmSeries.json  --dest $@
 		touch $@
 
 # Film Categories

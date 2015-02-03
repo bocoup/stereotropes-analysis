@@ -27,8 +27,14 @@ def get_tropes_from_rdf(fp):
             pass
     return results
 
-def get_film_from_rdf(fp):
+def get_film_from_rdf(fp, blacklist):
     film_data = read_json(fp)
+    blacklist = read_json(blacklist)
+
+    series = list()
+    for item in blacklist['results']['bindings']:
+        series.append(item['series']['value'])
+
     results = list()
     for binding in film_data['results']['bindings']:
         try:
@@ -36,8 +42,8 @@ def get_film_from_rdf(fp):
             film = binding['film']['value'].split('/')[-1]
             film_name = binding['label']['value']
             film_category = binding['film_category_label']['value']
-
-            results.append((trope, film, film_name, film_category))
+            if (binding['film']['value'] not in series):
+                results.append((trope, film, film_name, film_category))
         except:
             pass
 
@@ -165,9 +171,11 @@ def extract_film_tropes(path):
         film = tup[2]
         if (film in films['values']):
             films['values'][film]['values'].append(tup[0]) # trope name
+            films['values'][film]['count'] += 1
         else:
             films['values'][film] = {
                 'name': film,
+                'count': 1,
                 'values' : [tup[0]]
             }
 
@@ -260,7 +268,7 @@ if __name__ == "__main__":
         tropes = get_tropes_from_rdf(args.source[0])
         write_json(args.dest, tropes)
     elif args.command == 'extract_films':
-        films = get_film_from_rdf(args.source[0])
+        films = get_film_from_rdf(args.source[0], args.source[1])
         write_json(args.dest, films)
     elif args.command == 'extract_film_categories':
         film_categories = extract_film_categories(args.source[0])
