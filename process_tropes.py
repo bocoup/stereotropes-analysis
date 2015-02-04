@@ -123,7 +123,7 @@ def extract_films(film_trope_files):
 
                 films[name]['tropes'][gender].append(film[0])
 
-    return films
+    return films.values()
 
 def extract_film_categories(path):
     film_roles = read_json(path)

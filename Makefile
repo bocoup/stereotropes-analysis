@@ -1,7 +1,8 @@
 all: movie corpus
 corpus: data/results/base_corpus.json data/results/female_corpus.json data/results/male_corpus.json
 
-movie: movie_roles movie_categories movie_tropes trope_movies
+movie: movie_roles movie_categories movie_tropes trope_movies movie_metadata
+movie_metadata: data/results/films.json
 movie_roles: data/results/female_film_roles.json data/results/male_film_roles.json
 movie_categories: data/results/female_film_categories.json data/results/male_film_categories.json
 trope_movies: data/results/female_trope_films.json data/results/male_trope_films.json
