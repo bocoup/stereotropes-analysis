@@ -1,11 +1,12 @@
 all: movie corpus
 corpus: data/results/base_corpus.json data/results/female_corpus.json data/results/male_corpus.json
 
-movie: movie_roles movie_categories movie_tropes
+movie: movie_roles movie_categories movie_tropes trope_movies movie_metadata
+movie_metadata: data/results/films.json
 movie_roles: data/results/female_film_roles.json data/results/male_film_roles.json
 movie_categories: data/results/female_film_categories.json data/results/male_film_categories.json
+trope_movies: data/results/female_trope_films.json data/results/male_trope_films.json
 movie_tropes: data/results/female_film_tropes.json data/results/male_film_tropes.json
-
 
 analyse: analysis_dir log_likelyhood
 analysis_dir:
@@ -57,14 +58,20 @@ data/results/male_only_tropes.json: data/results/male_tropes.json data/results/u
 	touch $@
 
 
-# Film extraction
+# Film role extraction
 data/results/female_film_roles.json: data/raw/FemaleTropeMovieRoles.json
 		mkdir -p data/results
-		python process_tropes.py --command extract_films --source $< --dest $@
+		python process_tropes.py --command extract_film_trope_tuples --source data/raw/FemaleTropeMovieRoles.json data/raw/FilmSeries.json --dest $@
 		touch $@
 data/results/male_film_roles.json: data/raw/MaleTropeMovieRoles.json
 		mkdir -p data/results
-		python process_tropes.py --command extract_films --source $< --dest $@
+		python process_tropes.py --command extract_film_trope_tuples --source data/raw/MaleTropeMovieRoles.json data/raw/FilmSeries.json  --dest $@
+		touch $@
+
+# Film extraction
+data/results/films.json: data/results/female_film_roles.json data/results/male_film_roles.json
+		mkdir -p data/results
+		python process_tropes.py --command extract_films --source data/results/female_film_roles.json data/results/male_film_roles.json --dest $@
 		touch $@
 
 # Film Categories
@@ -77,14 +84,26 @@ data/results/male_film_categories.json: data/results/male_film_roles.json
 		python process_tropes.py --command extract_film_categories --source $< --dest $@
 		touch $@
 
-# Film Tropes
-data/results/female_film_tropes.json: data/results/female_film_roles.json
+# Trope -> films
+data/results/female_trope_films.json: data/results/female_film_roles.json
 		mkdir -p data/results
 		python process_tropes.py --command extract_trope_films --source $< --dest $@
 		touch $@
-data/results/male_film_tropes.json: data/results/male_film_roles.json
+
+data/results/male_trope_films.json: data/results/male_film_roles.json
 		mkdir -p data/results
 		python process_tropes.py --command extract_trope_films --source $< --dest $@
+		touch $@
+
+# Film -> Tropes
+data/results/female_film_tropes.json: data/results/female_film_roles.json
+		mkdir -p data/results
+		python process_tropes.py --command extract_film_tropes --source $< --dest $@
+		touch $@
+
+data/results/male_film_tropes.json: data/results/male_film_roles.json
+		mkdir -p data/results
+		python process_tropes.py --command extract_film_tropes --source $< --dest $@
 		touch $@
 
 #Trope tagging

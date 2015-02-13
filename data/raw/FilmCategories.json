@@ -59,9 +59,6 @@
         "genre": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/Nollywood" }
       } ,
       {
-        "genre": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/FilmSeries" }
-      } ,
-      {
         "genre": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/FantasyFilms" }
       } ,
       {

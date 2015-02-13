@@ -12,10 +12,13 @@
     <div style="position:fixed; top: 0; width: 90%; z-index: 100; background-color: white">
       <div class="row filters">
 
-        <div class="col-md-12" style="padding:0">
+        <div class="col-md-11" style="padding:0">
           <div class="filterSelector">
 
           </div>
+        </div>
+        <div class="loader col-md-1" style="padding-top:30px; display:none;">
+          <img src="loader.gif">
         </div>
 
       </div>
@@ -49,14 +52,18 @@
     {{#each tropes}}
       <div class="lettergroup" id="{{this.letter}}-letter">
 
+        <div class="vis">
+
+        </div>
+
         <h2 class="keyletter">{{this.letter}}</h2>
         <br>
         {{#values}}
           <div class="trope">
             <h4>{{format(name)}}</h4>
-            <ul class="adjectives">
+            <ul class="adjectives" on-click="selectedAdjective" >
               {{#values}}
-                <li style="color:{{color(this[3])}}">{{this[0]}} ({{formatScore(this[3])}})</li>
+                <li data-adjective="{{this[0]}}" style="color:{{color(this[3])}}">{{this[0]}} ({{formatScore(this[3])}})</li>
               {{/values}}
             </ul>
           </div>

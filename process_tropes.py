@@ -3,6 +3,8 @@ import json
 import os
 from collections import OrderedDict
 import image_getter
+import re
+
 
 def write_json(path, data):
     output = open(path, 'w')
@@ -28,8 +30,14 @@ def get_tropes_from_rdf(fp):
             pass
     return results
 
-def get_film_from_rdf(fp):
+def get_film_tropes_from_rdf(fp, blacklist):
     film_data = read_json(fp)
+    blacklist = read_json(blacklist)
+
+    series = list()
+    for item in blacklist['results']['bindings']:
+        series.append(item['series']['value'])
+
     results = list()
     for binding in film_data['results']['bindings']:
         try:
@@ -37,8 +45,8 @@ def get_film_from_rdf(fp):
             film = binding['film']['value'].split('/')[-1]
             film_name = binding['label']['value']
             film_category = binding['film_category_label']['value']
-
-            results.append((trope, film, film_name, film_category))
+            if (binding['film']['value'] not in series):
+                results.append((trope, film, film_name, film_category))
         except:
             pass
 
@@ -66,6 +74,58 @@ def extract_adjectives(path):
             adjectives = []
         results.append((tagged[0], adjectives))
     return results
+
+
+# find film name without the string
+exp = re.compile('^[\w\s]+:\s(.*)')
+
+# remove the year from the string, if it's there.
+yr = re.compile(' (\d{4})|\(\d{4}\)')
+
+def normalize_film_name(name):
+
+    # remove the prefix
+    film_name = exp.findall(name)
+    parsed_name = ''
+    if (len(film_name) > 0):
+      parsed_name = film_name[0]
+    else:
+      parsed_name = name
+
+    # remove whatever year mention
+    m = yr.findall(parsed_name)
+    if (len(m) > 0):
+      no_year_name = re.subn(yr, '', parsed_name)[0]
+    else:
+      no_year_name = parsed_name
+
+    return no_year_name
+
+def extract_films(film_trope_files):
+    films = {}
+
+    for fp in film_trope_files:
+        gender = fp.split("_")[0].split("/")[-1]
+        film_tropes = read_json(fp)
+
+        for film in film_tropes:
+
+            name = normalize_film_name(film[2])
+            if name not in films:
+                films[name] = {
+                    'name' : name,
+                    'categories': [film[3]],
+                    'tropes': {}
+                }
+                films[name]['tropes'][gender] = [film[0]]
+            else:
+                films[name]['categories'].append(film[3])
+                if gender not in films[name]['tropes']:
+                    films[name]['tropes'][gender] = []
+
+                films[name]['tropes'][gender].append(film[0])
+
+    return films.values()
 
 def extract_film_categories(path):
     film_roles = read_json(path)
@@ -154,6 +214,28 @@ def build_trope_count_per_decade(tropes):
         tropes['values'][trope_name]['decade_counts'] = decade_counts_list
 
     return tropes
+
+def extract_film_tropes(path):
+    film_roles = read_json(path)
+    films = {
+        'count': 0,
+        'values': {}
+    }
+
+    for tup in film_roles:
+        film = tup[2]
+        if (film in films['values']):
+            films['values'][film]['values'].append(tup[0]) # trope name
+            films['values'][film]['count'] += 1
+        else:
+            films['values'][film] = {
+                'name': film,
+                'count': 1,
+                'values' : [tup[0]]
+            }
+
+
+    return films['values'].values()
 
 
 def extract_trope_films(path):
@@ -246,8 +328,11 @@ if __name__ == "__main__":
     if args.command == 'extract_tropes':
         tropes = get_tropes_from_rdf(args.source[0])
         write_json(args.dest, tropes)
+    elif args.command == 'extract_film_trope_tuples':
+        films = get_film_tropes_from_rdf(args.source[0], args.source[1])
+        write_json(args.dest, films)
     elif args.command == 'extract_films':
-        films = get_film_from_rdf(args.source[0])
+        films = extract_films(args.source)
         write_json(args.dest, films)
     elif args.command == 'extract_film_categories':
         film_categories = extract_film_categories(args.source[0])
@@ -255,6 +340,9 @@ if __name__ == "__main__":
     elif args.command == 'extract_trope_films':
         trope_film_categories = extract_trope_films(args.source[0])
         write_json(args.dest, trope_film_categories)
+    elif args.command == 'extract_film_tropes':
+        film_tropes = extract_film_tropes(args.source[0])
+        write_json(args.dest, film_tropes)
     elif args.command == 'tag_tropes':
         tagged_results = tag_tropes(args.source[0])
         write_json(args.dest, tagged_results)

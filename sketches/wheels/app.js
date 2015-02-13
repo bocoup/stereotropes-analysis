@@ -1,4 +1,8 @@
 $(function() {
+
+  var data;
+  var loader = $('.loader');
+
   var filters = new Ractive({
     el : $('.filterSelector')[0],
     template : $('#tmp-filters').text(),
@@ -63,6 +67,59 @@ $(function() {
       color: function(score) {
         return tropeColor(score);
       }
+    },
+
+    oncomplete: function() {
+      loader.hide();
+    }
+  });
+
+  var selectedAdjective;
+
+  tropeList.on('selectedAdjective', function(event) {
+
+    var target = $(event.original.target);
+    var adjective = target.data('adjective');
+    if (adjective === selectedAdjective) {
+
+      tropeList.set('tropes', data);
+      target.removeClass('selected');
+      selectedAdjective = null;
+
+    } else {
+
+      selectedAdjective = adjective;
+      target.addClass('selected');
+
+      // find tropes that have have that adjective
+      var subset = [];
+      data.forEach(function(letterData) {
+        var item = {
+          letter: letterData.letter,
+          values : []
+        };
+
+        var letterSubset = letterData.values.filter(function(trope) {
+          var isExisting = trope.values.reduce(function(prev, tuple) {
+            if (tuple[0] === adjective) {
+              prev += 1;
+            }
+            return prev;
+          }, 0);
+
+          if (isExisting === 1) {
+            console.log(trope);
+            return true;
+          } else {
+            return false;
+          }
+        });
+
+        item.values = letterSubset;
+        subset.push(item);
+      });
+
+      tropeList.set('tropes', subset);
     }
   });
 
@@ -83,7 +140,9 @@ $(function() {
   };
 
   filters.observe('selectedGender', function(gender) {
-    getData(gender).then(function(tropeAdjectives, adjectiveRank) {
+    getData(gender).then(function(tropeAdjectives) {
+
+      data = tropeAdjectives;
 
       // render tropes
       tropeList.set('tropes', tropeAdjectives);

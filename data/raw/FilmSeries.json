@@ -1,0 +1,174 @@
+{
+  "head": {
+    "vars": [ "series" ]
+  } ,
+  "results": {
+    "bindings": [
+      {
+        "series": { "type": "uri" , "value": "http://dbtropes.org/resource/Anime/Pokemon" }
+      } ,
+      {
+        "series": { "type": "uri" , "value": "http://dbtropes.org/resource/Franchise/Godzilla" }
+      } ,
+      {
+        "series": { "type": "uri" , "value": "http://dbtropes.org/resource/Franchise/Batman" }
+      } ,
+      {
+        "series": { "type": "uri" , "value": "http://dbtropes.org/resource/Franchise/StarTrek" }
+      } ,
+      {
+        "series": { "type": "uri" , "value": "http://dbtropes.org/resource/Film/TheThreeStooges" }
+      } ,
+      {
+        "series": { "type": "uri" , "value": "http://dbtropes.org/resource/Film/HarryPotter" }
+      } ,
+      {
+        "series": { "type": "uri" , "value": "http://dbtropes.org/resource/Film/JamesBond" }
+      } ,
+      {
+        "series": { "type": "uri" , "value": "http://dbtropes.org/resource/Film/TheDarkKnightSaga" }
+      } ,
+      {
+        "series": { "type": "uri" , "value": "http://dbtropes.org/resource/Franchise/MarvelCinematicUniverse" }
+      } ,
+      {
+        "series": { "type": "uri" , "value": "http://dbtropes.org/resource/Franchise/Alien" }
+      } ,
+      {
+        "series": { "type": "uri" , "value": "http://dbtropes.org/resource/Franchise/ANightmareOnElmStreet" }
+      } ,
+      {
+        "series": { "type": "uri" , "value": "http://dbtropes.org/resource/Franchise/DieHard" }
+      } ,
+      {
+        "series": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/Starwars" }
+      } ,
+      {
+        "series": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/ThePhantomOfTheOpera" }
+      } ,
+      {
+        "series": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/MickeyMouse" }
+      } ,
+      {
+        "series": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/Zatoichi" }
+      } ,
+      {
+        "series": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/Dracula" }
+      } ,
+      {
+        "series": { "type": "uri" , "value": "http://dbtropes.org/resource/Franchise/FridayThe13th" }
+      } ,
+      {
+        "series": { "type": "uri" , "value": "http://dbtropes.org/resource/Franchise/IndianaJones" }
+      } ,
+      {
+        "series": { "type": "uri" , "value": "http://dbtropes.org/resource/Franchise/Rambo" }
+      } ,
+      {
+        "series": { "type": "uri" , "value": "http://dbtropes.org/resource/Franchise/TheTexasChainsawMassacre" }
+      } ,
+      {
+        "series": { "type": "uri" , "value": "http://dbtropes.org/resource/Franchise/StarWars" }
+      } ,
+      {
+        "series": { "type": "uri" , "value": "http://dbtropes.org/resource/Franchise/Hellraiser" }
+      } ,
+      {
+        "series": { "type": "uri" , "value": "http://dbtropes.org/resource/Franchise/Halloween" }
+      } ,
+      {
+        "series": { "type": "uri" , "value": "http://dbtropes.org/resource/Franchise/Gamera" }
+      } ,
+      {
+        "series": { "type": "uri" , "value": "http://dbtropes.org/resource/Franchise/ThePinkPanther" }
+      } ,
+      {
+        "series": { "type": "uri" , "value": "http://dbtropes.org/resource/Franchise/Rocky" }
+      } ,
+      {
+        "series": { "type": "uri" , "value": "http://dbtropes.org/resource/Franchise/Zorro" }
+      } ,
+      {
+        "series": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/TheLittleRascals" }
+      } ,
+      {
+        "series": { "type": "uri" , "value": "http://dbtropes.org/resource/WesternAnimation/IceAge" }
+      } ,
+      {
+        "series": { "type": "uri" , "value": "http://dbtropes.org/resource/WesternAnimation/DonaldDuck" }
+      } ,
+      {
+        "series": { "type": "uri" , "value": "http://dbtropes.org/resource/WesternAnimation/BugsBunny" }
+      } ,
+      {
+        "series": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/GodfreyHoNinjaMovies" }
+      } ,
+      {
+        "series": { "type": "uri" , "value": "http://dbtropes.org/resource/Franchise/ThePhantomOfTheOpera" }
+      } ,
+      {
+        "series": { "type": "uri" , "value": "http://dbtropes.org/resource/Franchise/TheCrow" }
+      } ,
+      {
+        "series": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/FuManchu" }
+      } ,
+      {
+        "series": { "type": "uri" , "value": "http://dbtropes.org/resource/Literature/ThePrisonerOfZenda" }
+      } ,
+      {
+        "series": { "type": "uri" , "value": "http://dbtropes.org/resource/WesternAnimation/DaffyDuck" }
+      } ,
+      {
+        "series": { "type": "uri" , "value": "http://dbtropes.org/resource/Franchise/DCCinematicUniverse" }
+      } ,
+      {
+        "series": { "type": "uri" , "value": "http://dbtropes.org/resource/Franchise/CharlieChan" }
+      } ,
+      {
+        "series": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/Frankenstein" }
+      } ,
+      {
+        "series": { "type": "uri" , "value": "http://dbtropes.org/resource/WesternAnimation/CasperTheFriendlyGhost" }
+      } ,
+      {
+        "series": { "type": "uri" , "value": "http://dbtropes.org/resource/Franchise/ChildrenOfTheCorn" }
+      } ,
+      {
+        "series": { "type": "uri" , "value": "http://dbtropes.org/resource/Franchise/CarryOn" }
+      } ,
+      {
+        "series": { "type": "uri" , "value": "http://dbtropes.org/resource/Franchise/Shrek" }
+      } ,
+      {
+        "series": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/ChildrenOfTheCorn" }
+      } ,
+      {
+        "series": { "type": "uri" , "value": "http://dbtropes.org/resource/Franchise/Frankenstein" }
+      } ,
+      {
+        "series": { "type": "uri" , "value": "http://dbtropes.org/resource/Franchise/FuManchu" }
+      } ,
+      {
+        "series": { "type": "uri" , "value": "http://dbtropes.org/resource/Franchise/Tarzan" }
+      } ,
+      {
+        "series": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/Mondo" }
+      } ,
+      {
+        "series": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/Poltergeist" }
+      } ,
+      {
+        "series": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/TalesForAll" }
+      } ,
+      {
+        "series": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/Flodder" }
+      } ,
+      {
+        "series": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/TheAdventuresOfAntoineDoinel" }
+      } ,
+      {
+        "series": { "type": "uri" , "value": "http://dbtropes.org/resource/Main/Olsen-Banden" }
+      }
+    ]
+  }
+}
