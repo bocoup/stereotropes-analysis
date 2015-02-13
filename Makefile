@@ -23,11 +23,11 @@ data/analysis/female_ll.json: data/results/base_corpus.json data/results/female_
 	# touch $@
 
 data/analysis/female_trope_clusters.json: data/results/female_tropes_adjectives.json
-	python analyse_data.py --command cluster --source data/results/female_tropes_adjectives.json --dest $@ --num_clusters 20
+	python analyse_data.py --command cluster --source data/results/female_tropes_adjectives.json --dest $@ --num_clusters 40
 data/analysis/male_trope_clusters.json: data/results/male_tropes_adjectives.json
-	python analyse_data.py --command cluster --source data/results/male_tropes_adjectives.json --dest $@ --num_clusters 20
+	python analyse_data.py --command cluster --source data/results/male_tropes_adjectives.json --dest $@ --num_clusters 40
 data/analysis/all_trope_clusters.json: data/results/male_tropes_adjectives.json data/results/female_tropes_adjectives.json
-	python analyse_data.py --command cluster --source data/results/male_tropes_adjectives.json data/results/female_tropes_adjectives.json --dest $@ --num_clusters 20
+	python analyse_data.py --command cluster --source data/results/male_tropes_adjectives.json data/results/female_tropes_adjectives.json --dest $@ --num_clusters 40
 	touch $@
 
 data/analysis/male_trope_ll.json: data/results/base_corpus.json data/results/male_tropes_adjectives.json
@@ -142,3 +142,15 @@ data/results/female_corpus.json: data/results/female_tropes_adjectives.json
 data/results/male_corpus.json: data/results/male_tropes_adjectives.json
 	python process_tropes.py --command make_base_corpus --source data/results/male_tropes_adjectives.json --dest $@
 	touch $@
+
+
+#Download images for Tropes
+
+images_female:
+	mkdir -p data/results/images/female
+	python process_tropes.py --command get_images --source data/results/female_only_tropes.json --dest data/results/images/female
+
+images_male:
+	mkdir -p data/results/images/male
+	python process_tropes.py --command get_images --source data/results/male_only_tropes.json --dest data/results/images/male
+

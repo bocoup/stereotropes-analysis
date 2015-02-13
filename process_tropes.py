@@ -2,7 +2,9 @@ import tagger
 import json
 import os
 from collections import OrderedDict
+import image_getter
 import re
+
 
 def write_json(path, data):
     output = open(path, 'w')
@@ -302,6 +304,11 @@ def filter_tropes(target, other):
     return result
 
 
+def get_images(trope_list, destination_folder):
+    results = image_getter.get_images(sorted(trope_list), destination_folder)
+    return results
+
+
 if __name__ == "__main__":
     import argparse
     import sys
@@ -314,6 +321,7 @@ if __name__ == "__main__":
     parser.add_argument('--source', nargs='+', help='source file', required=True)
     parser.add_argument('--dest', help='source file', required=True)
     parser.add_argument('--command', help='command to run', required=True)
+    parser.add_argument('--label', required=False)
 
     args = parser.parse_args()
 
@@ -347,6 +355,11 @@ if __name__ == "__main__":
     elif args.command == 'filter_tropes':
         filtered = filter_tropes(args.source[0], args.source[1])
         write_json(args.dest, filtered)
+    elif args.command == 'get_images':
+        trope_info = read_json(args.source[0])
+        trope_list = [t[0] for t in trope_info]
+        res = get_images(trope_list, args.dest)
+        write_json(os.path.join(args.dest, 'results.json'), res)
     else:
         print('Unknown Command')
 
