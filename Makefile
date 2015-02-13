@@ -123,3 +123,15 @@ data/results/female_corpus.json: data/results/female_tropes_adjectives.json
 data/results/male_corpus.json: data/results/male_tropes_adjectives.json
 	python process_tropes.py --command make_base_corpus --source data/results/male_tropes_adjectives.json --dest $@
 	touch $@
+
+
+#Download images for Tropes
+
+images_female:
+	mkdir -p data/results/images/female
+	python process_tropes.py --command get_images --source data/results/female_only_tropes.json --dest data/results/images/female
+
+images_male:
+	mkdir -p data/results/images/male
+	python process_tropes.py --command get_images --source data/results/male_only_tropes.json --dest data/results/images/male
+
