@@ -1,2 +1,5 @@
 data/results
 data/analysis
+src/film/api-keys.json
+*.sqlite
+*.pyc
