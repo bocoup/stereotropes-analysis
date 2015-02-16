@@ -2,7 +2,7 @@ import tagger
 import json
 import os
 from collections import OrderedDict
-import image_getter
+import trope_image_getter
 import re
 
 
@@ -305,7 +305,7 @@ def filter_tropes(target, other):
 
 
 def get_images(trope_list, destination_folder):
-    results = image_getter.get_images(sorted(trope_list), destination_folder)
+    results = trope_image_getter.get_images(sorted(trope_list), destination_folder)
     return results
 
 
