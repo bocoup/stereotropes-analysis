@@ -1,10 +1,33 @@
 # Make file for production data for the gendertropes vis.
+# These tasks output data in the format we are going to pipe
+# down to the client.
 
+#
+# Shared Variables
+#
+output_dir = data/production
 
-all: dicts
+#
+# Trope info map
+#
+dicts: $(output_dir)/trope_dict.json
 
-dicts: data/production/trope_dict.json
-
-data/production/trope_dict.json:
+$(output_dir)/trope_dict.json:
 	python trope_dictionary.py --dest $@
+
+
+#
+# Trope lists (just the trope ids)
+#
+lists: $(output_dir)/trope_list_all.json $(output_dir)/trope_list_top_100_ll.json $(output_dir)/trope_list_top_100_count.json
+
+$(output_dir)/trope_list_all.json:
+	python tropes.py --dest $@
+
+$(output_dir)/trope_list_top_100_ll.json:
+	python tropes.py --by_ll --dest $@
+
+$(output_dir)/trope_list_top_100_count.json:
+	python tropes.py --by_film_occurence --dest $@
+
 
