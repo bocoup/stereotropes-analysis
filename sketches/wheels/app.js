@@ -126,7 +126,7 @@ $(function() {
   var getData = function(gender) {
     var def = $.Deferred();
 
-    var getTropeAdjectives = $.ajax('../../data/analysis/' + gender + '_trope_ll.json');
+    var getTropeAdjectives = $.ajax('../../data/analysis/trope_ll-' + gender + '.json');
 
     $.when(getTropeAdjectives).done(function(tropes) {
 

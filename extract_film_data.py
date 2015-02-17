@@ -16,7 +16,7 @@ def read_json(path):
     return data
 
 def find_film(name, filmfile):
-  films = read_json('data/results/films_full.json')
+  films = read_json('data/results/films.json')
 
   for film in films:
     if (film['name'] == name):
@@ -71,18 +71,18 @@ def build_trope_adjectives(trope_ll_file, adjective_ll_file, tropes, output_trop
   write_json(output_adj, adjective_map.values())
   write_json(output_tropes, trope_adjectives_subset.values())
 
-film = find_film("Frozen", "data/results/films_full.json")
+film = find_film("Frozen", "data/results/films.json")
 
-build_trope_adjectives("data/analysis/male_trope_ll.json",
-  "data/analysis/male_ll.json",
+build_trope_adjectives("data/analysis/trope_ll-male.json",
+  "data/analysis/ll-male.json",
   film["tropes"]["male"],
-  "data/film/male_trope_ll.json",
-  "data/film/male_ll.json",
+  "data/film/trope_ll-male.json",
+  "data/film/ll-male.json",
 )
 
-build_trope_adjectives("data/analysis/female_trope_ll.json",
-  "data/analysis/female_ll.json",
+build_trope_adjectives("data/analysis/trope_ll-female.json",
+  "data/analysis/ll-female.json",
   film["tropes"]["female"],
-  "data/film/female_trope_ll.json",
-  "data/film/female_ll.json",
+  "data/film/trope_ll-female.json",
+  "data/film/ll-female.json",
 )

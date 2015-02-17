@@ -44,9 +44,12 @@ def get_film_tropes_from_rdf(fp, blacklist):
             trope = binding['trope']['value'].split('/')[-1]
             film = binding['film']['value'].split('/')[-1]
             film_name = binding['label']['value']
-            film_category = binding['film_category_label']['value']
+            # don't capture film category
+            # film_category = binding['film_category_label']['value']
+            role = binding['role']['value']
             if (binding['film']['value'] not in series):
-                results.append((trope, film, film_name, film_category))
+                # Remove film category
+                results.append((trope, film, film_name, role))
         except:
             pass
 
@@ -67,7 +70,6 @@ def extract_adjectives(path):
     tagged_tropes = read_json(path)
     results = list()
     for tagged in tagged_tropes:
-        # print tagged[2][u'JJ']
         try:
             adjectives = tagged[2]['JJ']
         except:
@@ -101,52 +103,98 @@ def normalize_film_name(name):
 
     return no_year_name
 
-def extract_films(film_trope_files):
+def build_film_tropes(film_trope_files):
     films = {}
 
     for fp in film_trope_files:
-        gender = fp.split("_")[0].split("/")[-1]
+        gender = 'male'
+        if 'female' in fp:
+            gender = 'female'
+
         film_tropes = read_json(fp)
 
         for film in film_tropes:
-
+            film_id = film[1]
             name = normalize_film_name(film[2])
-            if name not in films:
-                films[name] = {
+            if film_id not in films:
+                films[film_id] = {
+                    'id' : film_id,
                     'name' : name,
-                    'categories': [film[3]],
-                    'tropes': {}
+                    'tropes': { 'male' : [], 'female' : [] }
                 }
-                films[name]['tropes'][gender] = [film[0]]
+                films[film_id]['tropes'][gender] = [film[0]]
             else:
-                films[name]['categories'].append(film[3])
-                if gender not in films[name]['tropes']:
-                    films[name]['tropes'][gender] = []
+                if gender not in films[film_id]['tropes']:
+                    films[film_id]['tropes'][gender] = []
 
-                films[name]['tropes'][gender].append(film[0])
+                films[film_id]['tropes'][gender].append(film[0])
 
-    return films.values()
+    return films
+
+def extract_films(films, film_trope_files):
+
+    films = read_json(films)
+    film_tropes = build_film_tropes(film_trope_files)
+
+    write_json("test.json", film_tropes)
+    film_data = {}
+
+    # Build film dictionary:
+    for film in films['results']['bindings']:
+        film_id = film['film']['value'].split('/')[-1]
+
+        film_trope_list = { 'male' : [], 'female' : [] }
+
+        if film_id in film_tropes:
+            film_trope_list = film_tropes[film_id]['tropes']
+
+        film_name = normalize_film_name(film['label']['value'])
+        film_category = film['film_category_label']['value']
+
+        if film_id in film_data:
+            # add category
+            if film_category not in film_data[film_id]['categories']:
+                film_data[film_id]['categories'].append(film_category)
+        else:
+            # add entry for film
+            film_data[film_id] = {
+                'id' : film_id,
+                'name' : film_name,
+                'categories': [film_category],
+                'tropes' : film_trope_list
+            }
+
+    return film_data.values()
+
+
 
 def extract_film_categories(path):
-    film_roles = read_json(path)
+    films = read_json(path)
     categories = dict([])
     category_names = list()
 
-    for tup in film_roles:
-        film_category = tup[-1]
-        if (film_category in categories):
-            categories[film_category].append((tup[0], tup[1]))
-        else:
-            categories[film_category] = [(tup[0], tup[1])]
-            category_names.append(film_category)
+    for film in films:
+        for category in film['categories']:
 
-    for cat in category_names:
-        tuples = categories[cat]
-        categories[cat] = {
-            'count' : len(tuples),
-            'films' : [tup[1] for tup in tuples],
-            'tropes': [tup[0] for tup in tuples]
-        }
+            if category in categories:
+                categories[category]['films'].append(film['id'])
+                categories[category]['tropes']['female'] += film['tropes']['female']
+                categories[category]['tropes']['male'] += film['tropes']['male']
+                categories[category]['film_count'] += 1
+                categories[category]['tropes_male_count'] += len(film['tropes']['male'])
+                categories[category]['tropes_female_count'] += len(film['tropes']['female'])
+            else:
+                categories[category] = {
+                    'films' : [film['id']],
+                    'category' : category,
+                    'tropes' : {
+                        'male' : film['tropes']['male'],
+                        'female' : film['tropes']['female'],
+                    },
+                    'film_count' : 1,
+                    'tropes_male_count' : len(film['tropes']['male']),
+                    'tropes_female_count' : len(film['tropes']['female'])
+                }
 
     return categories
 
@@ -215,67 +263,56 @@ def build_trope_count_per_decade(tropes):
 
     return tropes
 
-def extract_film_tropes(path):
-    film_roles = read_json(path)
-    films = {
-        'count': 0,
-        'values': {}
-    }
+def extract_trope_films(films, film_roles):
 
-    for tup in film_roles:
-        film = tup[2]
-        if (film in films['values']):
-            films['values'][film]['values'].append(tup[0]) # trope name
-            films['values'][film]['count'] += 1
-        else:
-            films['values'][film] = {
-                'name': film,
-                'count': 1,
-                'values' : [tup[0]]
-            }
+    # build film dictionary
+    films = read_json(films)
+    films_dict = {}
+    for film in films:
+        films_dict[film['id']] = film
 
+    film_roles = read_json(film_roles)
 
-    return films['values'].values()
-
-
-def extract_trope_films(path):
-    film_roles = read_json(path)
     tropes = {
         'count' : 0,
         'values' : {}
     }
-    for tup in film_roles:
-        trope = tup[0]
+
+    for role in film_roles:
+        trope = role[0]
+        film_id = role[1]
+
         if (trope in tropes['values']):
 
             # Aggregate trope -> film appearance + counts/unique
 
-            if (tup[1] not in tropes['values'][trope]['films']):
+            if (film_id not in tropes['values'][trope]['films']):
                 tropes['values'][trope]['films_unique'] += 1
 
-            tropes['values'][trope]['films'].append(tup[1])
+            tropes['values'][trope]['films'].append(film_id)
             tropes['values'][trope]['films_count'] += 1
-
-            # Aggregate trope -> film category appearance + counts/unique
-
-            if (tup[3] not in tropes['values'][trope]['categories']):
-                 tropes['values'][trope]['categories_unique'] += 1
-
-            tropes['values'][trope]['categories'].append(tup[3])
-            tropes['values'][trope]['categories_count'] += 1
 
         else:
             tropes['count'] += 1
 
             tropes['values'][trope] = {
                 'name' : trope,
-                'films' : [tup[1]],
+                'films' : [film_id],
                 'films_count' : 1,
                 'films_unique' : 1,
-                'categories': [tup[3]],
-                'categories_count': 1,
-                'categories_unique': 1
+                'categories': [],
+                'categories_count': 0,
+                'categories_unique': 0
             }
+
+        # Aggregate trope -> film category appearance + counts/unique
+        film_categories = films_dict[film_id]['categories']
+        for cat in film_categories:
+            if (cat not in tropes['values'][trope]['categories']):
+                tropes['values'][trope]['categories_unique'] += 1
+
+        tropes['values'][trope]['categories'] += film_categories
+        tropes['values'][trope]['categories_count'] += len(film_categories)
 
     tropes = build_trope_count_per_decade(tropes)
     tropes['values'] = tropes['values'].values()
@@ -332,17 +369,14 @@ if __name__ == "__main__":
         films = get_film_tropes_from_rdf(args.source[0], args.source[1])
         write_json(args.dest, films)
     elif args.command == 'extract_films':
-        films = extract_films(args.source)
+        films = extract_films(args.source[0], [args.source[1], args.source[2]])
         write_json(args.dest, films)
     elif args.command == 'extract_film_categories':
         film_categories = extract_film_categories(args.source[0])
         write_json(args.dest, film_categories)
     elif args.command == 'extract_trope_films':
-        trope_film_categories = extract_trope_films(args.source[0])
+        trope_film_categories = extract_trope_films(args.source[0],args.source[1])
         write_json(args.dest, trope_film_categories)
-    elif args.command == 'extract_film_tropes':
-        film_tropes = extract_film_tropes(args.source[0])
-        write_json(args.dest, film_tropes)
     elif args.command == 'tag_tropes':
         tagged_results = tag_tropes(args.source[0])
         write_json(args.dest, tagged_results)
