@@ -166,7 +166,27 @@ def extract_films(films, film_trope_files):
 
     return film_data.values()
 
+def extract_film_tropes(path):
+    film_roles = read_json(path)
+    films = {
+        'count': 0,
+        'values': {}
+    }
 
+    for tup in film_roles:
+        film = tup[2]
+        if (film in films['values']):
+            films['values'][film]['values'].append(tup[0]) # trope name
+            films['values'][film]['count'] += 1
+        else:
+            films['values'][film] = {
+                'name': film,
+                'count': 1,
+                'values' : [tup[0]]
+            }
+
+
+    return films['values'].values()
 
 def extract_film_categories(path):
     films = read_json(path)
@@ -374,6 +394,9 @@ if __name__ == "__main__":
     elif args.command == 'extract_film_categories':
         film_categories = extract_film_categories(args.source[0])
         write_json(args.dest, film_categories)
+    elif args.command == 'extract_film_tropes':
+        film_tropes = extract_film_tropes(args.source[0])
+        write_json(args.dest, film_tropes)
     elif args.command == 'extract_trope_films':
         trope_film_categories = extract_trope_films(args.source[0],args.source[1])
         write_json(args.dest, trope_film_categories)

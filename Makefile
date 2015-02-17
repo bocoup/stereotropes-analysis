@@ -89,6 +89,17 @@ data/results/trope_films-male.json: data/results/films.json data/results/film_ro
 		python process_tropes.py --command extract_trope_films --source data/results/films.json data/results/film_roles-male.json --dest $@
 		touch $@
 
+# Film -> Tropes
+data/results/film_tropes-female.json: data/results/film_roles-female.json
+		mkdir -p data/results
+		python process_tropes.py --command extract_film_tropes --source $< --dest $@
+		touch $@
+
+data/results/film_tropes-male.json: data/results/film_roles-male.json
+		mkdir -p data/results
+		python process_tropes.py --command extract_film_tropes --source $< --dest $@
+		touch $@
+
 #Trope tagging
 data/results/tropes_tagged-female.json: data/results/only_tropes-female.json
 	mkdir -p data/results
