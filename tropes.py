@@ -82,27 +82,27 @@ if __name__ == "__main__":
     male_image_info = util.read_json('data/results/images/male/results.json')
     female_image_info = util.read_json('data/results/images/female/results.json')
 
-    male_trope_info = util.read_json('data/results/male_only_tropes.json')
-    female_trope_info = util.read_json('data/results/female_only_tropes.json')
+    male_trope_info = util.read_json('data/results/only_tropes-male.json')
+    female_trope_info = util.read_json('data/results/only_tropes-female.json')
 
     res = []
 
     if args.by_ll:
-        male_ll = util.read_json('data/analysis/male_ll.json')
-        female_ll = util.read_json('data/analysis/female_ll.json')
+        male_ll = util.read_json('data/analysis/ll-male.json')
+        female_ll = util.read_json('data/analysis/ll-female.json')
 
-        male_trope_adj = util.read_json('data/results/male_tropes_adjectives.json')
-        female_trope_adj = util.read_json('data/results/female_tropes_adjectives.json')
+        male_trope_adj = util.read_json('data/results/tropes_adjectives-male.json')
+        female_trope_adj = util.read_json('data/results/tropes_adjectives-female.json')
 
         res = top_N_by_ll(100, male_ll, female_ll, male_trope_adj, female_trope_adj)
     elif args.by_film_occurence:
-        male_film_data = util.read_json('data/results/male_film_tropes.json')
-        female_film_data = util.read_json('data/results/female_film_tropes.json')
+        male_film_data = util.read_json('data/results/film_tropes-male.json')
+        female_film_data = util.read_json('data/results/film_tropes-female.json')
 
         res = top_N_by_film_occurrence(100, male_film_data, female_film_data)
     else:
-        male_trope_info = util.read_json('data/results/male_only_tropes.json')
-        female_trope_info = util.read_json('data/results/female_only_tropes.json')
+        male_trope_info = util.read_json('data/results/only_tropes-male.json')
+        female_trope_info = util.read_json('data/results/only_tropes-female.json')
         res = all_tropes(male_trope_info + female_trope_info)
 
     util.write_json(args.dest, res)

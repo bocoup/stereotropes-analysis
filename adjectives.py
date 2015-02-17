@@ -126,8 +126,8 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    male_trope_adj = util.read_json('data/results/male_tropes_adjectives.json')
-    female_trope_adj = util.read_json('data/results/female_tropes_adjectives.json')
+    male_trope_adj = util.read_json('data/results/tropes_adjectives-male.json')
+    female_trope_adj = util.read_json('data/results/tropes_adjectives-female.json')
 
     res = adjective_network(male_trope_adj, female_trope_adj)
     util.write_json(args.dest, res)
