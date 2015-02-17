@@ -31,3 +31,11 @@ $(output_dir)/trope_list_top_100_count.json:
 	python tropes.py --by_film_occurence --dest $@
 
 
+#
+# Adjective page data
+#
+
+adjectives: $(output_dir)/adjectives_network.json
+
+$(output_dir)/adjectives_network.json:
+		python adjectives.py --dest $@
