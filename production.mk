@@ -38,4 +38,4 @@ $(output_dir)/trope_list_top_100_count.json:
 adjectives: $(output_dir)/adjectives_network.json
 
 $(output_dir)/adjectives_network.json:
-		python adjectives.py --dest $@
+		python -m src.adjectives.adjectives --dest $@
