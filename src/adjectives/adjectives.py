@@ -1,6 +1,6 @@
 # Module for producing the data for the gendertropes adjectives visualization
 
-import util
+from src import util
 from collections import defaultdict
 from sets import Set
 from collections import Counter
