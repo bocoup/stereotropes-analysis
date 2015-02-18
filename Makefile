@@ -72,6 +72,12 @@ data/results/films.json: data/raw/Films.json data/results/film_roles-female.json
 		python process_tropes.py --command extract_films --source data/raw/Films.json data/results/film_roles-female.json data/results/film_roles-male.json --dest $@
 		touch $@
 
+# Films with similar films
+data/results/fs.json: data/results/films_with_poster_files.json
+		mkdir -p data/results
+		python process_tropes.py --command find_similar_films --source data/results/films_with_poster_files.json --dest $@
+		touch $@
+
 # Film Categories -> (tropes, films, counts)
 data/results/film_categories.json: data/results/films.json
 		mkdir -p data/results

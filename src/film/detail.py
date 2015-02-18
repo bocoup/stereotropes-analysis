@@ -1,6 +1,6 @@
 # Builds detail files for each film
 #
-# python -m src.film.detail --src=data/results/films_with_poster_files.json
+# python -m src.film.detail --src=data/results/films_with_posters_and_similiar_films.json
 # --dest=/Users/iros/dev/bocoup/tvtropes/data/films/detail
 # --roles data/results/film_roles-female.json
 # --roles data/results/film_roles-male.json
@@ -10,28 +10,8 @@
 from os.path import join
 from src import util
 from src.film import roles
+from src.film import util as filmutil
 
-def get_film_base(film):
-  base = {
-    'id' : film['id'],
-    'name' : film['name']
-  }
-  if 'poster_filename' in film:
-    base['poster_url'] = film['poster_filename']
-
-  return base
-
-def get_film_extendeed(film):
-  base = get_film_base(film)
-  if 'metadata' in film and film['metadata'] is not None:
-    base['plot'] = film['metadata']['Plot']
-    base['release_year'] = film['metadata']['Year']
-    base['genres'] = film['metadata']['Genre']
-    base['imdbid'] = film['metadata']['imdbID']
-
-    return base
-  else:
-    return None
 
 def extract_detail_files(films, dest, roles, name=None, extended=False):
 
@@ -43,9 +23,9 @@ def extract_detail_files(films, dest, roles, name=None, extended=False):
     if write:
       data = None
       if extended:
-        data = get_film_extendeed(film)
+        data = filmutil.get_film_extendeed(film)
       else:
-        data = get_film_base(film)
+        data = filmutil.get_film_base(film)
 
       if roles and data:
         # Extract role data
@@ -53,6 +33,7 @@ def extract_detail_files(films, dest, roles, name=None, extended=False):
         if film['id'] in roles:
           data['roles'] = roles[film['id']]
 
+      if data:
         util.write_json(join(dest, data['id'] + '.json'), data)
 
 if __name__ == "__main__":
