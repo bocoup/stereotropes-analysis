@@ -64,6 +64,26 @@ def gender_split(male_ll, female_ll, adj_to_tropes_male, adj_to_tropes_female, t
             'female': female_percent
         }
 
+    def get_tropes(adjective):
+        male_tropes = []
+        female_tropes =  []
+
+        try:
+            male_tropes = adj_to_tropes_male[adjective]['tropes']
+        except:
+            # print('keyerror male', adjective)
+            None
+
+        try:
+            female_tropes = adj_to_tropes_female[adjective]['tropes']
+        except:
+            # print('keyerror female', adjective)
+            None
+
+        return {
+            'male': male_tropes,
+            'female': female_tropes
+        }
 
 
     def format_adjectives(ll_data):
@@ -74,7 +94,7 @@ def gender_split(male_ll, female_ll, adj_to_tropes_male, adj_to_tropes_female, t
                 'count': tup[1],
                 'log_likelihood': tup[2],
                 'log_likelihood_norm': tup[3],
-                # 'tropes': adj_to_tropes[tup[0]]['tropes'],
+                'tropes': get_tropes(tup[0]),
                 'percentage_occurance': get_percentage(tup[0])
             })
 
