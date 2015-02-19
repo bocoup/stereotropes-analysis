@@ -38,4 +38,13 @@ $(output_dir)/trope_list_top_100_count.json:
 adjectives: $(output_dir)/adjectives_network.json
 
 $(output_dir)/adjectives_network.json:
-		python -m src.adjectives.adjectives --dest $@
+	python -m src.adjectives.adjectives --dest $@
+
+#
+# Gender splits page data
+#
+
+gender_split: $(output_dir)/gender_splits.json
+
+$(output_dir)/gender_splits.json:
+	python -m src.adjectives.gender_splits --dest $@
