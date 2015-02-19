@@ -51,7 +51,11 @@ def get_roles(trope_files):
         if 'JJ' in tags['by_tag']:
           adjectives = tags['by_tag']['JJ']
 
-        movie_tropes[film_id][gender].append([trope, role, adjectives])
+        movie_tropes[film_id][gender].append({
+          'id' : trope,
+          'role' : role,
+          'adjectives' : adjectives
+        })
 
         if trope in movie_trope_dictionary[film_id][gender]:
           movie_trope_dictionary[film_id][gender][trope].append(role)
