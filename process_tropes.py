@@ -4,7 +4,7 @@ import os
 from collections import OrderedDict
 import trope_image_getter
 import re
-
+from src.film import similar
 
 def write_json(path, data):
     output = open(path, 'w')
@@ -283,6 +283,10 @@ def build_trope_count_per_decade(tropes):
 
     return tropes
 
+def compute_film_similarity(films):
+    films = read_json(films)
+    return similar.get_similiar_films(films)
+
 def extract_trope_films(films, film_roles):
 
     # build film dictionary
@@ -400,6 +404,9 @@ if __name__ == "__main__":
     elif args.command == 'extract_trope_films':
         trope_film_categories = extract_trope_films(args.source[0],args.source[1])
         write_json(args.dest, trope_film_categories)
+    elif args.command == 'find_similar_films':
+        films_with_similar_films = compute_film_similarity(args.source[0])
+        write_json(args.dest, films_with_similar_films)
     elif args.command == 'tag_tropes':
         tagged_results = tag_tropes(args.source[0])
         write_json(args.dest, tagged_results)
