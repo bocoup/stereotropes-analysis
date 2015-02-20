@@ -1,4 +1,5 @@
 from os.path import splitext, basename, join, isfile
+from src import util
 
 def get_poster_path(film_id, image_url, dest_folder):
     extension = splitext(basename(image_url))[1]
