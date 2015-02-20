@@ -10,7 +10,8 @@ def to_name(trope_id):
 
 def image_url(id, url):
     if url:
-        return 'assets/data/tropes/images/' + id + '.jpg'
+        extension = url.split('.')[-1]
+        return 'assets/data/tropes/images/' + id + '.' + extension
     else:
         return None
 
