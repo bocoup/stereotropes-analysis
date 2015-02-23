@@ -5,6 +5,7 @@
 from os.path import join
 from src import util
 from src.trope import util as tropeutil
+from src.trope import similar
 import trope_dictionary as t_dict
 
 def write_tropes(tropes, dest):
@@ -19,6 +20,8 @@ if __name__ == "__main__":
     parser.add_argument('--extended', help='If true, will output extended form', required=False)
 
     args = parser.parse_args()
+
+    films = util.read_json('data/results/films.json')
 
     male_image_info = util.read_json('data/results/images/male/results.json')
     female_image_info = util.read_json('data/results/images/female/results.json')
@@ -53,4 +56,7 @@ if __name__ == "__main__":
     # get trope variance over time
     tropes_with_occurance_over_time = tropeutil.get_occurance_over_time(tropes, male_trope_films, female_trope_films, film_categories)
 
-    write_tropes(tropes, args.dest)
+    # tropes with similarity
+    tropes_with_similarity = similar.get_similar_tropes(tropes_with_occurance_over_time, films)
+
+    write_tropes(tropes_with_similarity, args.dest)
