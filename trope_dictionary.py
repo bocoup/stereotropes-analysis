@@ -15,8 +15,15 @@ def image_url(id, url):
     else:
         return None
 
+def adjectives(trope):
+    return trope['adjs'][0:5]
 
-def basic_info(male_trope_info, male_image_info, female_trope_info, female_image_info):
+def map_array(trope_array, attr_name):
+    """Convert array of arrays into dict
+    """
+    return {trope[0]: {attr_name: trope[1]} for trope in trope_array}
+
+def basic_info(tropes):
     """Return a dict of base trope info
 
     Format will be the following
@@ -24,16 +31,17 @@ def basic_info(male_trope_info, male_image_info, female_trope_info, female_image
             id:
             name:
             gender:
+            adjs:
             image_url:
         }
     """
-    info = extended_info(male_trope_info, male_image_info, female_trope_info, female_image_info)
+    info = extended_info(tropes)
 
     for k, v in info.iteritems():
         del v['description']
     return info
 
-def extended_info(male_trope_info, male_image_info, female_trope_info, female_image_info):
+def extended_info(tropes):
     """Return a dict of extended trope info.
 
     Format will be the following
@@ -42,45 +50,24 @@ def extended_info(male_trope_info, male_image_info, female_trope_info, female_im
             name:
             description:
             gender:
+            adjs:
             image_url:
         }
     """
-
-    male_image_map = {trope[0]: trope[1] for trope in male_image_info}
-    female_image_map = {trope[0]: trope[1] for trope in female_image_info}
-
-    male_trope_map = {trope[0]: trope[1] for trope in male_trope_info}
-    female_trope_map = {trope[0]: trope[1] for trope in female_trope_info}
-
     results = dict()
-    for k, v in male_trope_map.iteritems():
+    for k, v in tropes.iteritems():
         results[k] = {
             'id': k,
             'name': to_name(k),
-            'description': v,
-            'gender': 'm',
-            'image_url': image_url(k, male_image_map[k])
+            'description': v['desc'],
+            'gender': v['gender'],
+            'image_url': image_url(k, v['img']),
+            'adjs' : adjectives(v)
         }
-
-
-    for k, v in female_trope_map.iteritems():
-        results[k] = {
-            'id': k,
-            'name': to_name(k),
-            'description': v,
-            'gender': 'f',
-            'image_url': image_url(k, female_image_map[k])
-        }
-
     return results
-
 
 if __name__ == "__main__":
     import argparse
-    import sys
-    import json
-    import string
-    import os
 
     parser = argparse.ArgumentParser(description='Generate the info dict for tropes')
     parser.add_argument('--dest', help='source file', required=True)
@@ -89,20 +76,35 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    male_image_info = util.read_json('data/results/images/male/results.json')
-    female_image_info = util.read_json('data/results/images/female/results.json')
+    files = {'data/results/images/male/results.json' : {'type':'img', 'gender':'m'},
+        'data/results/images/female/results.json' : {'type':'img', 'gender':'f'},
+        'data/results/only_tropes-male.json' : {'type':'desc', 'gender':'m'},
+        'data/results/only_tropes-female.json' : {'type':'desc', 'gender':'f'},
+        'data/results/tropes_adjectives-female.json' : {'type':'adjs', 'gender':'f'},
+        'data/results/tropes_adjectives-male.json' : {'type':'adjs', 'gender':'m'}
+        }
 
-    male_trope_info = util.read_json('data/results/male_only_tropes.json')
-    female_trope_info = util.read_json('data/results/female_only_tropes.json')
+    all_tropes = {}
+    for filename, options in files.iteritems():
+        attr_type = options['type']
+        data = util.read_json(filename)
+        attrs = map_array(data, attr_type)
+        for k, v in attrs.iteritems():
+            if(k not in all_tropes):
+                all_tropes[k] = {}
+            all_tropes[k].update(v)
+            if('gender' not in v):
+                all_tropes[k]['gender'] = options['gender']
+            elif(v['gender'] != options['gender']):
+                print "ERROR: genders don't match"
 
     if args.filter:
         filter_list = util.read_json(args.filter)
-        male_trope_info = [t for t in male_trope_info if t[0] in filter_list]
-        female_trope_info = [t for t in female_trope_info if t[0] in filter_list]
+        all_tropes = {k:v for (k,v) in all_tropes.iteritems() if k in filter_list}
 
     if args.extended:
-        res = extended_info(male_trope_info, male_image_info, female_trope_info, female_image_info)
+        res = extended_info(all_tropes)
         util.write_json(args.dest, res)
     else:
-        res = basic_info(male_trope_info, male_image_info, female_trope_info, female_image_info)
+        res = basic_info(all_tropes)
         util.write_json(args.dest, res)

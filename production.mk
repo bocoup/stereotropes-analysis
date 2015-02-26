@@ -13,6 +13,7 @@ output_dir = data/production
 dicts: $(output_dir)/trope_dict.json
 
 $(output_dir)/trope_dict.json:
+	mkdir -p data/production
 	python trope_dictionary.py --dest $@
 
 
