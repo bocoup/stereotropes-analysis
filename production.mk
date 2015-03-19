@@ -31,8 +31,8 @@ $(output_dir)/trope_list_top_100_ll.json:
 $(output_dir)/trope_list_top_100_count.json:
 	python tropes.py --by_film_occurence --dest $@
 
-$(output_dir)/film_list.json: data/results/films_with_posters_and_similiar_films.json
-	python src/film/list.py --src $< --dest $@
+$(output_dir)/film_list.json: data/results/films/films_with_similarity.json
+	python -m src.film.list --src $< --dest $@
 
 #
 # Adjective page data
