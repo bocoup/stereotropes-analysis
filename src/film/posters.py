@@ -122,12 +122,11 @@ def download_poster_images(films, dest_folder, sleep_interval=0.5):
                 try:
                     print poster_url
                     wget.download(poster_url, out=poster_file_path)
+                    time.sleep(sleep_interval)
                 except:
                     failed_films.append(film)
 
             film['poster_filename'] = basename(poster_file_path)
-
-        time.sleep(sleep_interval)
 
     return films
 
@@ -138,7 +137,8 @@ if __name__ == "__main__":
     parser.add_argument('--src', help='Source films dictionary', required=True)
     parser.add_argument('--dest', help='Destination for film dictionary', required=False)
     parser.add_argument('--failed', help='Where to write failing films', required=False)
-    parser.add_argument('--scrape', help='Set true to scrape rotten tomatoes', required=False)
+    parser.add_argument('--scrape', dest='scrape', action='store_true')
+    parser.add_argument('--no-scrape', dest='scrape', action='store_false')
     parser.add_argument('--poster_dest', help='Destination dir for film posters', required=False)
 
     args = parser.parse_args()
@@ -148,7 +148,7 @@ if __name__ == "__main__":
     # Download rotten tomato data:
     if args.scrape:
         films = util.read_json(args.src)
-        films_with_posters = get_all_posters(films[1:3])
+        films_with_posters = get_all_posters(films)
         util.write_json(args.dest, films_with_posters[0])
         if args.failed:
             util.write_json(args.failed, films_with_posters[1])
