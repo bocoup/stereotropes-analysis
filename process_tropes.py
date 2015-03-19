@@ -148,21 +148,24 @@ def extract_films(films, film_trope_files):
         if film_id in film_tropes:
             film_trope_list = film_tropes[film_id]['tropes']
 
-        film_name = normalize_film_name(film['label']['value'])
-        film_category = film['film_category_label']['value']
+        # don't add films if they have no tropes!
+        if len(film_trope_list['male']) > 0 or len(film_trope_list['female']) > 0:
 
-        if film_id in film_data:
-            # add category
-            if film_category not in film_data[film_id]['categories']:
-                film_data[film_id]['categories'].append(film_category)
-        else:
-            # add entry for film
-            film_data[film_id] = {
-                'id' : film_id,
-                'name' : film_name,
-                'categories': [film_category],
-                'tropes' : film_trope_list
-            }
+            film_name = normalize_film_name(film['label']['value'])
+            film_category = film['film_category_label']['value']
+
+            if film_id in film_data:
+                # add category
+                if film_category not in film_data[film_id]['categories']:
+                    film_data[film_id]['categories'].append(film_category)
+            else:
+                # add entry for film
+                film_data[film_id] = {
+                    'id' : film_id,
+                    'name' : film_name,
+                    'categories': [film_category],
+                    'tropes' : film_trope_list
+                }
 
     return film_data.values()
 
