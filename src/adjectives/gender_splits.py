@@ -128,8 +128,8 @@ if __name__ == "__main__":
     male_ll = util.read_json('data/analysis/ll-male.json')
     female_ll = util.read_json('data/analysis/ll-female.json')
 
-    male_tropes = util.read_json('data/results/male_tropes.json')
-    female_tropes = util.read_json('data/results/female_tropes.json')
+    male_tropes = util.read_json('data/results/tropes-male.json')
+    female_tropes = util.read_json('data/results/tropes-female.json')
 
     alltropes = Set([t[0] for t in male_tropes + female_tropes])
 
