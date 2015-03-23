@@ -92,8 +92,8 @@ if __name__ == "__main__":
 
         res = top_N_by_ll(100, male_ll, female_ll, male_trope_adj, female_trope_adj)
     elif args.by_film_occurence:
-        male_film_data = util.read_json('data/results/trope_films-male.json')
-        female_film_data = util.read_json('data/results/trope_films-female.json')
+        male_film_data = util.read_json('data/results/films/trope_films-male.json')
+        female_film_data = util.read_json('data/results/films/trope_films-female.json')
 
         res = top_N_by_film_occurrence(100, male_film_data, female_film_data)
     else:
