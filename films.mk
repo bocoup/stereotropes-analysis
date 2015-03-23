@@ -41,17 +41,17 @@ analyse: trope_movies movie_categories data/results/films/full_with_similarity.j
 # Film role extraction
 data/results/films/roles-female.json: data/raw/FilmTropeRoles-Female.json
 	mkdir -p data/results
-	python process_tropes.py --command extract_film_trope_tuples --source data/raw/FilmTropeRoles-Female.json data/raw/FilmSeries.json --dest $@
+	python -m src.preprocess.process_tropes --command extract_film_trope_tuples --source data/raw/FilmTropeRoles-Female.json data/raw/FilmSeries.json --dest $@
 	touch -c $@
 data/results/films/roles-male.json: data/raw/FilmTropeRoles-Male.json
 	mkdir -p data/results
-	python process_tropes.py --command extract_film_trope_tuples --source data/raw/FilmTropeRoles-Male.json data/raw/FilmSeries.json  --dest $@
+	python -m src.preprocess.process_tropes --command extract_film_trope_tuples --source data/raw/FilmTropeRoles-Male.json data/raw/FilmSeries.json  --dest $@
 	touch -c $@
 
 # Produce a map of Film -> (tropes by gender, film categories)
 data/results/films/raw.json: data/raw/Films.json data/results/films/roles-female.json data/results/films/roles-male.json
 	mkdir -p data/results
-	python process_tropes.py --command extract_films --source data/raw/Films.json data/results/films/roles-female.json data/results/films/roles-male.json --dest $@
+	python -m src.preprocess.process_tropes --command extract_films --source data/raw/Films.json data/results/films/roles-female.json data/results/films/roles-male.json --dest $@
 	touch -c $@
 
 
@@ -90,35 +90,35 @@ data/results/films/full_with_posters.json: data/results/films/full_with_rt.json
 # Produce a map of Film Categories -> (tropes, films, counts)
 data/results/films/categories.json: data/results/films/full_with_rt.json
 	mkdir -p data/results/films
-	python process_tropes.py --command extract_film_categories --source $< --dest $@
+	python -m src.preprocess.process_tropes --command extract_film_categories --source $< --dest $@
 	touch -c $@
 
 # Produce maps of Tropes -> films
 data/results/films/trope_films-female.json: data/results/films/full_with_rt.json data/results/films/roles-female.json
 	mkdir -p data/results/films
-	python process_tropes.py --command extract_trope_films --source data/results/films/full_with_rt.json data/results/films/roles-female.json --dest $@
+	python -m src.preprocess.process_tropes --command extract_trope_films --source data/results/films/full_with_rt.json data/results/films/roles-female.json --dest $@
 	touch -c $@
 
 data/results/films/trope_films-male.json: data/results/films/full_with_rt.json data/results/films/roles-male.json
 	mkdir -p data/results/films
-	python process_tropes.py --command extract_trope_films --source data/results/films/full_with_rt.json data/results/films/roles-male.json --dest $@
+	python -m src.preprocess.process_tropes --command extract_trope_films --source data/results/films/full_with_rt.json data/results/films/roles-male.json --dest $@
 	touch -c $@
 
 # Produce maps of Film -> Tropes
 data/results/films/film_tropes-female.json: data/results/films/roles-female.json
 	mkdir -p data/results/films
-	python process_tropes.py --command extract_film_tropes --source $< --dest $@
+	python -m src.preprocess.process_tropes --command extract_film_tropes --source $< --dest $@
 	touch -c $@
 
 data/results/films/film_tropes-male.json: data/results/films/roles-male.json
 	mkdir -p data/results/films
-	python process_tropes.py --command extract_film_tropes --source $< --dest $@
+	python -m src.preprocess.process_tropes --command extract_film_tropes --source $< --dest $@
 	touch -c $@
 
 # Compute similarity of films based on co-occuring tropes
 data/results/films/full_with_similarity.json: data/results/films/full_with_posters.json
 	echo "Adding film similarity"
 	mkdir -p data/results/films
-	python process_tropes.py --command find_similar_films --source data/results/films/full_with_posters.json --dest data/results/films/full_with_similarity.json
+	python -m src.preprocess.process_tropes --command find_similar_films --source data/results/films/full_with_posters.json --dest data/results/films/full_with_similarity.json
 	touch -c $@
 
