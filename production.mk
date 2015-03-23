@@ -56,3 +56,17 @@ gender_split: $(output_dir)/gender_splits.json
 
 $(output_dir)/gender_splits.json:
 	python -m src.adjectives.gender_splits --dest $@
+
+
+#
+# Film details data
+#
+
+film_details:
+	echo "Building detail film files"
+	mkdir -p data/production/films/details
+	python -m src.film.detail --src=data/results/films/full_with_similarity.json \
+		--dest=data/production/films/details \
+		--roles data/results/films/roles-female.json \
+		--roles data/results/films/roles-male.json \
+		--extended=True
