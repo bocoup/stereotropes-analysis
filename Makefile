@@ -1,5 +1,52 @@
-all: movie corpus
-corpus: data/results/base_corpus.json data/results/corpus-female.json data/results/corpus-male.json
+#
+# Top level makefile for gendertropes project.
+#
+# This file contains top level data generation tasks for gendertropes.
+# The actual data generation steps are actually specified in the following
+# makefiles which this makefile merely shells to.
+# 	tropes.mk —  pre-production tasks for trope related data
+# 	films.mk - pre-production tasks for film related data
+#		production.mk - tasks that produce the production files for the final visualization
+#
+
+#####################
+# Top level tasks
+#####################
+
+tropes: extract_tropes analyse_tropes tropes_prod
+tropes_with_download: extract_tropes download_trope_images analyse_tropes tropes_prod
+
+
+
+#####################
+# Trope Preprocessing Tasks
+#####################
+
+extract_tropes:
+	make -f tropes.mk extract
+
+download_trope_images:
+	make -f tropes.mk download
+
+analyse_tropes:
+	make -f tropes.mk analyse
+
+#####################
+# Trope Production Tasks
+#####################
+
+tropes_prod:
+	make -f production.mk dicts
+	make -f production.mk lists
+	make -f production.mk film_list
+	make -f production.mk adjectives
+	make -f production.mk gender_split
+
+
+
+#####################
+# Film Preprocessing Tasks
+#####################
 
 movie: movie_roles movie_categories trope_movies movie_metadata
 movie_metadata: data/results/films/raw.json
@@ -7,54 +54,10 @@ movie_roles: data/results/films/roles-female.json data/results/films/roles-male.
 movie_categories: data/results/films/categories.json
 trope_movies: data/results/films/trope_films-female.json data/results/films/trope_films-male.json
 
-analyse: analysis_dir log_likelyhood
-analysis_dir:
-	mkdir -p data/analysis
+#####################
+# Film Production Tasks
+#####################
 
-cluster: data/analysis/trope_clusters-female.json data/analysis/male_trope_clusters.json data/analysis/all_trope_clusters.json
-log_likelyhood: data/analysis/ll-male.json data/analysis/ll-female.json data/analysis/trope_ll-male.json data/analysis/trope_ll-female.json
-
-data/analysis/ll-male.json: data/results/base_corpus.json data/results/corpus-male.json
-	python analyse_data.py --command log_likelyhood --source data/results/corpus-male.json data/results/base_corpus.json --dest $@
-	touch $@
-data/analysis/ll-female.json: data/results/base_corpus.json data/results/corpus-female.json
-	python analyse_data.py --command log_likelyhood --source data/results/corpus-female.json data/results/base_corpus.json --dest $@
-	# touch $@
-
-data/analysis/trope_clusters-female.json: data/results/tropes_adjectives-female.json
-	python analyse_data.py --command cluster --source data/results/tropes_adjectives-female.json --dest $@ --num_clusters 40
-data/analysis/male_trope_clusters.json: data/results/tropes_adjectives-male.json
-	python analyse_data.py --command cluster --source data/results/tropes_adjectives-male.json --dest $@ --num_clusters 40
-data/analysis/all_trope_clusters.json: data/results/tropes_adjectives-male.json data/results/tropes_adjectives-female.json
-	python analyse_data.py --command cluster --source data/results/tropes_adjectives-male.json data/results/tropes_adjectives-female.json --dest $@ --num_clusters 40
-	touch $@
-
-data/analysis/trope_ll-male.json: data/results/base_corpus.json data/results/tropes_adjectives-male.json
-	python analyse_data.py --command trope_log_likelyhood --source data/results/tropes_adjectives-male.json data/results/base_corpus.json --dest $@
-	touch $@
-data/analysis/trope_ll-female.json: data/results/base_corpus.json data/results/tropes_adjectives-female.json
-	python analyse_data.py --command trope_log_likelyhood --source data/results/tropes_adjectives-female.json data/results/base_corpus.json --dest $@
-	touch $@
-
-# Trope extraction
-data/results/tropes-female.json: data/raw/TropesWithDescription-Female.json
-	mkdir -p data/results
-	python process_tropes.py --command extract_tropes --source $< --dest $@
-	touch $@
-data/results/tropes-male.json: data/raw/TropesWithDescription-Male.json
-	python process_tropes.py --command extract_tropes --source $< --dest $@
-	touch $@
-data/results/tropes-unisex.json: data/raw/TropesWithDescription-Unisex.json
-	python process_tropes.py --command extract_tropes --source $< --dest $@
-	touch $@
-
-# Category Filtering
-data/results/only_tropes-female.json: data/results/tropes-female.json data/results/tropes-unisex.json
-	python process_tropes.py --command filter_tropes --source data/results/tropes-female.json data/results/tropes-unisex.json --dest $@
-	touch $@
-data/results/only_tropes-male.json: data/results/tropes-male.json data/results/tropes-unisex.json
-	python process_tropes.py --command filter_tropes --source data/results/tropes-male.json data/results/tropes-unisex.json --dest $@
-	touch $@
 
 # Film role extraction
 data/results/films/roles-female.json: data/raw/FilmTropeRoles-Female.json
@@ -100,53 +103,6 @@ data/results/films/film_tropes-male.json: data/results/films/roles-male.json
 		python process_tropes.py --command extract_film_tropes --source $< --dest $@
 		touch $@
 
-#Trope tagging
-data/results/tropes_tagged-female.json: data/results/only_tropes-female.json
-	mkdir -p data/results
-	python process_tropes.py --command tag_tropes --source $< --dest $@
-	touch $@
-data/results/tropes_tagged-male.json: data/results/only_tropes-male.json
-	python process_tropes.py --command tag_tropes --source $< --dest $@
-	touch $@
-data/results/tropes_tagged-unisex.json: data/results/tropes-unisex.json
-	python process_tropes.py --command tag_tropes --source $< --dest $@
-	touch $@
-
-
-#Adjective extraction
-data/results/tropes_adjectives-female.json: data/results/tropes_tagged-female.json
-	python process_tropes.py --command extract_adjectives --source $< --dest $@
-	touch $@
-data/results/tropes_adjectives-male.json: data/results/tropes_tagged-male.json
-	python process_tropes.py --command extract_adjectives --source $< --dest $@
-	touch $@
-data/results/tropes_adjectives-unisex.json: data/results/tropes_tagged-unisex.json
-	python process_tropes.py --command extract_adjectives --source $< --dest $@
-	touch $@
-
-#Make corpora for 3 main large groups. All adjectives, all female and all male.
-data/results/base_corpus.json: data/results/tropes_adjectives-female.json data/results/tropes_adjectives-male.json
-	python process_tropes.py --command make_base_corpus --source data/results/tropes_adjectives-female.json data/results/tropes_adjectives-male.json --dest $@
-	touch $@
-
-data/results/corpus-female.json: data/results/tropes_adjectives-female.json
-	python process_tropes.py --command make_base_corpus --source data/results/tropes_adjectives-female.json --dest $@
-	touch $@
-
-data/results/corpus-male.json: data/results/tropes_adjectives-male.json
-	python process_tropes.py --command make_base_corpus --source data/results/tropes_adjectives-male.json --dest $@
-	touch $@
-
-
-#Download images for Tropes
-
-images_female:
-	mkdir -p data/results/images/female
-	python process_tropes.py --command get_images --source data/results/only_tropes-female.json --dest data/results/images/female
-
-images_male:
-	mkdir -p data/results/images/male
-	python process_tropes.py --command get_images --source data/results/only_tropes-male.json --dest data/results/images/male
 
 #Download data for films
 
