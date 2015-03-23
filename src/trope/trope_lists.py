@@ -1,4 +1,4 @@
-import util
+from src import util
 
 # Functions that generate trope lists for use in
 # the main visualization
@@ -67,10 +67,6 @@ def top_N_by_film_occurrence(n, male_film_tropes, female_film_tropes):
 
 if __name__ == "__main__":
     import argparse
-    import sys
-    import json
-    import string
-    import os
 
     parser = argparse.ArgumentParser(description='Generate trope lists')
     parser.add_argument('--dest', help='source file', required=True)

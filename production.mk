@@ -23,13 +23,13 @@ $(output_dir)/trope_dict.json:
 lists: $(output_dir)/trope_list_all.json $(output_dir)/trope_list_top_100_ll.json $(output_dir)/trope_list_top_100_count.json $(output_dir)/film_list.json
 
 $(output_dir)/trope_list_all.json:
-	python tropes.py --dest $@
+	python -m src.trope.trope_lists --dest $@
 
 $(output_dir)/trope_list_top_100_ll.json:
-	python tropes.py --by_ll --dest $@
+	python -m src.trope.trope_lists --by_ll --dest $@
 
 $(output_dir)/trope_list_top_100_count.json:
-	python tropes.py --by_film_occurence --dest $@
+	python -m src.trope.trope_lists --by_film_occurence --dest $@
 
 $(output_dir)/film_list.json: data/results/films/full_with_similarity.json
 	python -m src.film.list --src $< --dest $@
