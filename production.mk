@@ -14,7 +14,7 @@ dicts: $(output_dir)/trope_dict.json
 
 $(output_dir)/trope_dict.json:
 	mkdir -p data/production
-	python trope_dictionary.py --dest $@
+	python -m src.trope.trope_dictionary --dest $@
 
 
 #
@@ -31,6 +31,11 @@ $(output_dir)/trope_list_top_100_ll.json:
 $(output_dir)/trope_list_top_100_count.json:
 	python -m src.trope.trope_lists --by_film_occurence --dest $@
 
+#
+# Film lists
+#
+
+film_list: $(output_dir)/film_list.json
 $(output_dir)/film_list.json: data/results/films/full_with_similarity.json
 	python -m src.film.list --src $< --dest $@
 
