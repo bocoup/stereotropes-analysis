@@ -8,6 +8,7 @@ from src import util
 def scrape(path):
 
   films = util.read_json(path)
+  newfilms = list()
 
   for film in films:
 
@@ -23,14 +24,13 @@ def scrape(path):
       if 'Title' in response:
         # Film data found!
         film['metadata'] = response
+        newfilms.append(film)
         print response['Title']
-      else:
-        film['metadata'] = None
 
     except:
       pass
 
-  return films
+  return newfilms
 
 if __name__ == "__main__":
     import argparse

@@ -1,6 +1,7 @@
 # Builds detail files for each film
 #
-# python -m src.trope.detail --dest=/Users/iros/dev/bocoup/tvtropes/data/tropes/detail --extended=True
+# python -m src.trope.detail --dest=/Users/iros/dev/bocoup/tvtropes/data/tropes/detail
+#   --extended=True
 
 from os.path import join
 from src import util
@@ -21,7 +22,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    films = util.read_json('data/results/films.json')
+    films = util.read_json('data/results/films/full_with_similarity.json')
 
     male_image_info = util.read_json('data/results/images/male/results.json')
     female_image_info = util.read_json('data/results/images/female/results.json')
@@ -35,10 +36,10 @@ if __name__ == "__main__":
     male_trope_adj = util.read_json('data/results/tropes_adjectives-male.json')
     female_trope_adj = util.read_json('data/results/tropes_adjectives-female.json')
 
-    male_trope_films = util.read_json('data/results/trope_films-male.json')
-    female_trope_films = util.read_json('data/results/trope_films-female.json')
+    male_trope_films = util.read_json('data/results/films/trope_films-male.json')
+    female_trope_films = util.read_json('data/results/films/trope_films-female.json')
 
-    film_categories = util.read_json('data/results/film_categories.json')
+    film_categories = util.read_json('data/results/films/categories.json')
 
     # build extended info tropes
     tropes = None

@@ -148,21 +148,24 @@ def extract_films(films, film_trope_files):
         if film_id in film_tropes:
             film_trope_list = film_tropes[film_id]['tropes']
 
-        film_name = normalize_film_name(film['label']['value'])
-        film_category = film['film_category_label']['value']
+        # don't add films if they have no tropes!
+        if len(film_trope_list['male']) > 0 or len(film_trope_list['female']) > 0:
 
-        if film_id in film_data:
-            # add category
-            if film_category not in film_data[film_id]['categories']:
-                film_data[film_id]['categories'].append(film_category)
-        else:
-            # add entry for film
-            film_data[film_id] = {
-                'id' : film_id,
-                'name' : film_name,
-                'categories': [film_category],
-                'tropes' : film_trope_list
-            }
+            film_name = normalize_film_name(film['label']['value'])
+            film_category = film['film_category_label']['value']
+
+            if film_id in film_data:
+                # add category
+                if film_category not in film_data[film_id]['categories']:
+                    film_data[film_id]['categories'].append(film_category)
+            else:
+                # add entry for film
+                film_data[film_id] = {
+                    'id' : film_id,
+                    'name' : film_name,
+                    'categories': [film_category],
+                    'tropes' : film_trope_list
+                }
 
     return film_data.values()
 
@@ -306,37 +309,40 @@ def extract_trope_films(films, film_roles):
         trope = role[0]
         film_id = role[1]
 
-        if (trope in tropes['values']):
+        # Not all films were found, so we aren't going to count the roles
+        # for those films.
+        if film_id in films_dict:
+            if (trope in tropes['values']):
 
-            # Aggregate trope -> film appearance + counts/unique
+                # Aggregate trope -> film appearance + counts/unique
 
-            if (film_id not in tropes['values'][trope]['films']):
-                tropes['values'][trope]['films_unique'] += 1
+                if (film_id not in tropes['values'][trope]['films']):
+                    tropes['values'][trope]['films_unique'] += 1
 
-            tropes['values'][trope]['films'].append(film_id)
-            tropes['values'][trope]['films_count'] += 1
+                tropes['values'][trope]['films'].append(film_id)
+                tropes['values'][trope]['films_count'] += 1
 
-        else:
-            tropes['count'] += 1
+            else:
+                tropes['count'] += 1
 
-            tropes['values'][trope] = {
-                'name' : trope,
-                'films' : [film_id],
-                'films_count' : 1,
-                'films_unique' : 1,
-                'categories': [],
-                'categories_count': 0,
-                'categories_unique': 0
-            }
+                tropes['values'][trope] = {
+                    'name' : trope,
+                    'films' : [film_id],
+                    'films_count' : 1,
+                    'films_unique' : 1,
+                    'categories': [],
+                    'categories_count': 0,
+                    'categories_unique': 0
+                }
 
-        # Aggregate trope -> film category appearance + counts/unique
-        film_categories = films_dict[film_id]['categories']
-        for cat in film_categories:
-            if (cat not in tropes['values'][trope]['categories']):
-                tropes['values'][trope]['categories_unique'] += 1
+            # Aggregate trope -> film category appearance + counts/unique
+            film_categories = films_dict[film_id]['categories']
+            for cat in film_categories:
+                if (cat not in tropes['values'][trope]['categories']):
+                    tropes['values'][trope]['categories_unique'] += 1
 
-        tropes['values'][trope]['categories'] += film_categories
-        tropes['values'][trope]['categories_count'] += len(film_categories)
+            tropes['values'][trope]['categories'] += film_categories
+            tropes['values'][trope]['categories_count'] += len(film_categories)
 
     tropes = build_trope_count_per_decade(tropes)
     tropes['values'] = tropes['values'].values()
