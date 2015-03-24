@@ -102,6 +102,6 @@ copy:
 	rsync -a data/production/trope_* $(target)/tropes
 	rsync -a data/production/adjectives_network.json $(target)/adjectives
 	rsync -a data/production/gender_splits.json $(target)/gender
-	rsync -a data/production/films $(target)/films
+	rsync -a data/production/films/details/ $(target)/films/detail/
 
 
