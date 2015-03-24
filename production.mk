@@ -70,3 +70,38 @@ film_details:
 		--roles data/results/films/roles-female.json \
 		--roles data/results/films/roles-male.json \
 		--extended=True
+
+
+#
+# Clean tasks
+#
+clean:
+	rm -rf data/production/
+	mkdir -p data/production
+
+#
+# Copy tasks
+#
+
+# This will sync the production files to their corresponding path in
+# a target data directory. The target directory is expected to have
+# the following structure of subdirs. It will use rsync to avoid
+# unnecessary copies. The target folder should be passed in as
+# a var to the makefile e.g. target=foo
+#
+# 	adjectives
+# 	films
+# 		details
+# 		posters
+# 	gender
+# 	tropes
+# 		detail
+# 		images
+copy:
+	echo $(target)
+	rsync -a data/production/trope_* $(target)/tropes
+	rsync -a data/production/adjectives_network.json $(target)/adjectives
+	rsync -a data/production/gender_splits.json $(target)/gender
+	rsync -a data/production/films $(target)/films
+
+

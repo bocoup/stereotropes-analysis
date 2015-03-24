@@ -66,7 +66,7 @@ def tag_tropes(fp):
         results.append((trope, result['tagged'], result['by_tag']))
     return results
 
-def extract_adjectives(path):
+def extract_adjectives(path, exclude):
     tagged_tropes = read_json(path)
     results = list()
     for tagged in tagged_tropes:
@@ -74,6 +74,9 @@ def extract_adjectives(path):
             adjectives = tagged[2]['JJ']
         except:
             adjectives = []
+        if exclude is not None:
+            adjectives = [x for x in adjectives if x not in exclude]
+
         results.append((tagged[0], adjectives))
     return results
 
@@ -378,10 +381,6 @@ def get_images(trope_list, destination_folder):
 
 if __name__ == "__main__":
     import argparse
-    import sys
-    import json
-    import string
-    import os
 
     parser = argparse.ArgumentParser(description='Process Tropes')
 
@@ -389,6 +388,7 @@ if __name__ == "__main__":
     parser.add_argument('--dest', help='source file', required=True)
     parser.add_argument('--command', help='command to run', required=True)
     parser.add_argument('--label', required=False)
+    parser.add_argument('--exclude_adjectives', help='path to file with adjectives to exclude', required=False, default=None)
 
     args = parser.parse_args()
 
@@ -417,7 +417,10 @@ if __name__ == "__main__":
         tagged_results = tag_tropes(args.source[0])
         write_json(args.dest, tagged_results)
     elif args.command == 'extract_adjectives':
-        adjectives = extract_adjectives(args.source[0])
+        if args.exclude_adjectives is not None:
+            exclude = read_json(args.exclude_adjectives)
+
+        adjectives = extract_adjectives(args.source[0], exclude)
         write_json(args.dest, adjectives)
     elif args.command == 'make_base_corpus':
         corpus = make_base_corpus(args.source)
