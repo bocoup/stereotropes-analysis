@@ -25,6 +25,12 @@ def adj_to_tropes(trope_adjectives):
 
     return dict(adj_trope_extended)
 
+def adj_frequences(trope_adjectives):
+    adjs = [tup[1] for tup in trope_adjectives]
+    adjs = list(itertools.chain(*adjs))
+    counts = Counter(adjs)
+    return counts
+
 # adjectives - 2 separate lists
 
   # gender
@@ -37,32 +43,33 @@ def adj_to_tropes(trope_adjectives):
     # log_likelihood (log likleyhood score)
     # tropes (associated trope list of ids)
 
-def gender_split(male_ll, female_ll, adj_to_tropes_male, adj_to_tropes_female, total_trope_count):
+def gender_split(male_ll, female_ll, male_tropes, female_tropes, total_trope_count):
+
+    adj_to_tropes_male = adj_to_tropes(male_tropes)
+    adj_to_tropes_female = adj_to_tropes(female_tropes)
+
+    male_counts = adj_frequences(male_tropes)
+    female_counts = adj_frequences(female_tropes)
+
+    male_adj_count = sum(male_counts.values())
+    female_adj_count = sum(female_counts.values())
 
     def get_percentage(adjective):
-        male_tropes = []
-        female_tropes =  []
 
-        try:
-            male_tropes = adj_to_tropes_male[adjective]['tropes']
-        except:
-            # print('keyerror male', adjective)
-            None
-
-        try:
-            female_tropes = adj_to_tropes_female[adjective]['tropes']
-        except:
-            # print('keyerror female', adjective)
-            None
-
-
-        male_percent = (len(male_tropes) / float(total_trope_count)) * 100
-        female_percent = (len(female_tropes) / float(total_trope_count)) * 100
+        male_percent = (male_counts[adjective] / float(male_adj_count)) * 100
+        female_percent = (female_counts[adjective] / float(female_adj_count)) * 100
 
         return {
             'male': male_percent,
             'female': female_percent
         }
+
+    def get_frequency(adjective):
+        return {
+            'male': male_counts[adjective],
+            'female': female_counts[adjective]
+        }
+
 
     def get_tropes(adjective):
         male_tropes = []
@@ -95,7 +102,8 @@ def gender_split(male_ll, female_ll, adj_to_tropes_male, adj_to_tropes_female, t
                 'log_likelihood': tup[2],
                 'log_likelihood_norm': tup[3],
                 'tropes': get_tropes(tup[0]),
-                'percentage_occurance': get_percentage(tup[0])
+                'percentage_occurance': get_percentage(tup[0]),
+                'frequency': get_frequency(tup[0])
             })
 
         return res
@@ -112,10 +120,6 @@ def gender_split(male_ll, female_ll, adj_to_tropes_male, adj_to_tropes_female, t
 
 if __name__ == "__main__":
     import argparse
-    import sys
-    import json
-    import string
-    import os
 
     parser = argparse.ArgumentParser(description='Generate adjective gender split data')
     parser.add_argument('--dest', help='source file', required=True)
@@ -133,7 +137,7 @@ if __name__ == "__main__":
 
     alltropes = Set([t[0] for t in male_tropes + female_tropes])
 
-    res = gender_split(male_ll, female_ll, adj_to_tropes(male_trope_adj), adj_to_tropes(female_trope_adj), len(alltropes))
+    res = gender_split(male_ll, female_ll, male_trope_adj, female_trope_adj, len(alltropes))
     util.write_json(args.dest, res)
 
 
