@@ -10,7 +10,7 @@ output_dir = data/production
 #
 # Trope info map
 #
-dicts: $(output_dir)/trope_dict.json
+trope_dict: $(output_dir)/trope_dict.json
 
 $(output_dir)/trope_dict.json:
 	mkdir -p data/production
@@ -20,7 +20,7 @@ $(output_dir)/trope_dict.json:
 #
 # Trope lists (just the trope ids)
 #
-lists: $(output_dir)/trope_list_all.json $(output_dir)/trope_list_top_100_ll.json $(output_dir)/trope_list_top_100_count.json $(output_dir)/film_list.json
+trope_lists: $(output_dir)/trope_list_all.json $(output_dir)/trope_list_top_100_ll.json $(output_dir)/trope_list_top_100_count.json $(output_dir)/film_list.json
 
 $(output_dir)/trope_list_all.json:
 	python -m src.trope.trope_lists --dest $@

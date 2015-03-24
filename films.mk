@@ -12,13 +12,6 @@
 #
 
 #####################
-# Shared variables
-#####################
-
-# RESULTS_DIR = data/results
-# ANALYSIS_DIR = data/analysis
-
-#####################
 # Top Level tasks
 #####################
 
@@ -28,7 +21,7 @@ movie_categories: data/results/films/categories.json
 trope_movies: data/results/films/trope_films-female.json data/results/films/trope_films-male.json
 
 extract: movie_roles data/results/films/raw.json
-download: data/RESULTS_DIRults/films/full_with_posters.json
+download: data/results/films/full_with_posters.json
 analyse: trope_movies movie_categories data/results/films/full_with_similarity.json
 
 #####################
@@ -40,11 +33,11 @@ analyse: trope_movies movie_categories data/results/films/full_with_similarity.j
 
 # Film role extraction
 data/results/films/roles-female.json: data/raw/FilmTropeRoles-Female.json
-	mkdir -p data/results
+	mkdir -p data/results/films
 	python -m src.preprocess.process_tropes --command extract_film_trope_tuples --source data/raw/FilmTropeRoles-Female.json data/raw/FilmSeries.json --dest $@
 	touch -c $@
 data/results/films/roles-male.json: data/raw/FilmTropeRoles-Male.json
-	mkdir -p data/results
+	mkdir -p data/results/films
 	python -m src.preprocess.process_tropes --command extract_film_trope_tuples --source data/raw/FilmTropeRoles-Male.json data/raw/FilmSeries.json  --dest $@
 	touch -c $@
 
@@ -60,7 +53,7 @@ data/results/films/raw.json: data/raw/Films.json data/results/films/roles-female
 #####################
 
 
-# - Scrabe omdb
+# - Scrape omdb
 data/results/films/full.json: data/results/films/raw.json
 	echo "Collecting OMDB Data"
 	mkdir -p data/results/films

@@ -40,8 +40,8 @@ analyse_tropes:
 #####################
 
 tropes_prod:
-	make -f production.mk dicts
-	make -f production.mk lists
+	make -f production.mk trope_dict
+	make -f production.mk trope_lists
 	make -f production.mk film_list
 	make -f production.mk adjectives
 	make -f production.mk gender_split
