@@ -1,4 +1,4 @@
-import util
+from src import util
 import re
 
 def to_name(trope_id):

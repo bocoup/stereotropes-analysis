@@ -5,7 +5,7 @@ from collections import defaultdict
 from sets import Set
 from collections import Counter
 import itertools
-import trope_dictionary
+from src.trope import trope_dictionary
 
 def adj_to_tropes(male_trope_adj, female_trope_adj):
     adj_trope = defaultdict(Set)

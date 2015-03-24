@@ -1,5 +1,5 @@
 from src import util
-import tagger
+from src.preprocess import tagger
 
 def get_roles(trope_files):
   ''' Returns the male and female roles identified in this movie'''

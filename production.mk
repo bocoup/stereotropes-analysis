@@ -10,27 +10,32 @@ output_dir = data/production
 #
 # Trope info map
 #
-dicts: $(output_dir)/trope_dict.json
+trope_dict: $(output_dir)/trope_dict.json
 
 $(output_dir)/trope_dict.json:
 	mkdir -p data/production
-	python trope_dictionary.py --dest $@
+	python -m src.trope.trope_dictionary --dest $@
 
 
 #
 # Trope lists (just the trope ids)
 #
-lists: $(output_dir)/trope_list_all.json $(output_dir)/trope_list_top_100_ll.json $(output_dir)/trope_list_top_100_count.json $(output_dir)/film_list.json
+trope_lists: $(output_dir)/trope_list_all.json $(output_dir)/trope_list_top_100_ll.json $(output_dir)/trope_list_top_100_count.json $(output_dir)/film_list.json
 
 $(output_dir)/trope_list_all.json:
-	python tropes.py --dest $@
+	python -m src.trope.trope_lists --dest $@
 
 $(output_dir)/trope_list_top_100_ll.json:
-	python tropes.py --by_ll --dest $@
+	python -m src.trope.trope_lists --by_ll --dest $@
 
 $(output_dir)/trope_list_top_100_count.json:
-	python tropes.py --by_film_occurence --dest $@
+	python -m src.trope.trope_lists --by_film_occurence --dest $@
 
+#
+# Film lists
+#
+
+film_list: $(output_dir)/film_list.json
 $(output_dir)/film_list.json: data/results/films/full_with_similarity.json
 	python -m src.film.list --src $< --dest $@
 
@@ -51,3 +56,17 @@ gender_split: $(output_dir)/gender_splits.json
 
 $(output_dir)/gender_splits.json:
 	python -m src.adjectives.gender_splits --dest $@
+
+
+#
+# Film details data
+#
+
+film_details:
+	echo "Building detail film files"
+	mkdir -p data/production/films/details
+	python -m src.film.detail --src=data/results/films/full_with_similarity.json \
+		--dest=data/production/films/details \
+		--roles data/results/films/roles-female.json \
+		--roles data/results/films/roles-male.json \
+		--extended=True

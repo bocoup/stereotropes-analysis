@@ -7,7 +7,7 @@ from os.path import join
 from src import util
 from src.trope import util as tropeutil
 from src.trope import similar
-import trope_dictionary as t_dict
+from src.trope import trope_dictionary as t_dict
 
 def write_tropes(tropes, dest):
   for trope in tropes.values():
