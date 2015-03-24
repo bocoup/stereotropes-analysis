@@ -77,6 +77,7 @@ def extract_adjectives(path, exclude):
         if exclude is not None:
             adjectives = [x for x in adjectives if x not in exclude]
 
+        adjectives = [a.lower() for a in adjectives]
         results.append((tagged[0], adjectives))
     return results
 
