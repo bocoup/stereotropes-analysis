@@ -7,6 +7,9 @@
 #
 output_dir = data/production
 
+create_out:
+	mkdir -p data/production
+
 #
 # Trope info map
 #
@@ -35,7 +38,7 @@ $(output_dir)/trope_list_top_100_count.json:
 # Film lists
 #
 
-film_list: $(output_dir)/film_list.json $(output_dir)/genres/all_top_100.json $(output_dir)/genres/genres.json $(output_dir)/genres/decades.json
+film_list: create_out $(output_dir)/film_list.json $(output_dir)/genres/all_top_100.json $(output_dir)/genres/genres.json $(output_dir)/genres/decades.json
 $(output_dir)/film_list.json: data/results/films/full_with_similarity.json
 	python -m src.film.list --src $< --dest $@
 

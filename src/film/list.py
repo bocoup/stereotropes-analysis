@@ -2,6 +2,8 @@ import os
 from os.path import join
 from os.path import dirname
 from src import util
+import re
+import math
 
 def parse_input(filename):
     '''
@@ -43,13 +45,26 @@ def genres(film):
         return [g.strip().lower().replace("/","_") for g in film["metadata"]["Genre"].split(",")]
     return []
 
+def decade_of(year):
+    return "{}s".format(int(math.floor(float(year) / 10.0) * 10))
+
 def decades(film):
     '''
     Returns a list of decades for a given film
+    There will be only one decade - but returned as
+    a list to make the processing work the same as
+    genres
     '''
-    if ("categories" in film):
-        decades = [d for d in film["categories"] if (d.find("Films of the") >= 0)]
-        return [d.replace(" ", "_") for d in decades]
+
+    # sometimes this is an int. other times its an empty string :(
+    if ("rtmetadata" in film and "year" in film["rtmetadata"] and (not isinstance(film["rtmetadata"]["year"], basestring))):
+        year = film["rtmetadata"]["year"]
+        return [decade_of(year)]
+    elif ("metadata" in film and "Year" in film["metadata"] and len(film["metadata"]["Year"]) > 0):
+        # sometimes this has a weird unicode dash in it that needs to be purged.
+        year = re.split("\D",film["metadata"]["Year"])[0]
+        year = int(year.strip())
+        return [decade_of(year)]
     return []
 
 def split_genres(all_films):
