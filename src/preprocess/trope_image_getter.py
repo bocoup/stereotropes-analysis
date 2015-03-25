@@ -6,7 +6,7 @@ import shutil
 from os.path import splitext, basename
 import os
 import time
-import util
+from src import util
 
 requests_cache.install_cache('tv_tropes_web_cache')
 
