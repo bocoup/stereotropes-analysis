@@ -101,13 +101,16 @@ def get_fields(films):
     '''
     Given a set of films, return a list
     of the same films - but with just the
-    attributes we care about (name and id)
+    attributes we care about (name, id, poster_url)
     '''
-    attrs = ["name", "id"]
+
+    # we want to keep the names as consistent as possible with
+    # the films info files - so we need to remap poster_filename
+    attrs = {"name":"name", "id":"id", "poster_filename":"poster_url"}
 
     output = []
     for film in films:
-        data = {k: film[k] for k in attrs}
+        data = {attrs[k]: film[k] for k in attrs.keys() if (k in film)}
         output.append(data)
 
     return output
