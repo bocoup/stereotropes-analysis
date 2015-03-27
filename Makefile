@@ -70,13 +70,22 @@ film_prod:
 	make -f production.mk film_details
 
 
+#####################
+# Clean Tasks
+#####################
+
+clean_prod:
+	make -f production.mk clean
 
 
+#####################
+# Copy Tasks
+#####################
 
-
-
-
-
+# The target folder should be passed in as a var to the makefile e.g. target=foo
+copy_prod:
+	export target
+	make -f production.mk copy
 
 
 
