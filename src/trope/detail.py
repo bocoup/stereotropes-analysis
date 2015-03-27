@@ -18,17 +18,10 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='Individual trope files')
     parser.add_argument('--dest', help='Destination folder', required=True)
-    parser.add_argument('--extended', help='If true, will output extended form', required=False)
 
     args = parser.parse_args()
 
     films = util.read_json('data/results/films/full_with_similarity.json')
-
-    male_image_info = util.read_json('data/results/images/male/results.json')
-    female_image_info = util.read_json('data/results/images/female/results.json')
-
-    male_trope_info = util.read_json('data/results/only_tropes-male.json')
-    female_trope_info = util.read_json('data/results/only_tropes-female.json')
 
     male_adj_ll = util.read_json('data/analysis/trope_ll-male.json')
     female_adj_ll = util.read_json('data/analysis/trope_ll-female.json')
@@ -42,11 +35,8 @@ if __name__ == "__main__":
     film_categories = util.read_json('data/results/films/categories.json')
 
     # build extended info tropes
-    tropes = None
-    if (args.extended):
-      tropes = t_dict.extended_info(male_trope_info, male_image_info, female_trope_info, female_image_info)
-    else:
-      tropes = t_dict.base_info(male_trope_info, male_image_info, female_trope_info, female_image_info)
+    tropes = t_dict.build_tropes()
+    tropes = t_dict.extended_info(tropes)
 
     # add adjectives and their ll scores
     tropes_with_adjectives = tropeutil.get_adjective_scores(tropes, male_adj_ll, female_adj_ll)

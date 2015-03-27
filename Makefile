@@ -45,7 +45,7 @@ tropes_prod:
 	make -f production.mk film_list
 	make -f production.mk adjectives
 	make -f production.mk gender_split
-
+	make -f production.mk trope_details
 
 
 #####################

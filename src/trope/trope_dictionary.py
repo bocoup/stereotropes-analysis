@@ -66,17 +66,9 @@ def extended_info(tropes):
         }
     return results
 
-if __name__ == "__main__":
-    import argparse
-
-    parser = argparse.ArgumentParser(description='Generate the info dict for tropes')
-    parser.add_argument('--dest', help='source file', required=True)
-    parser.add_argument('--filter', required=False)
-    parser.add_argument('--extended', required=False, action='store_true')
-
-    args = parser.parse_args()
-
-    files = {'data/results/images/male/results.json' : {'type':'img', 'gender':'m'},
+def build_tropes():
+    files = {
+        'data/results/images/male/results.json' : {'type':'img', 'gender':'m'},
         'data/results/images/female/results.json' : {'type':'img', 'gender':'f'},
         'data/results/only_tropes-male.json' : {'type':'desc', 'gender':'m'},
         'data/results/only_tropes-female.json' : {'type':'desc', 'gender':'f'},
@@ -97,6 +89,19 @@ if __name__ == "__main__":
                 all_tropes[k]['gender'] = options['gender']
             elif(v['gender'] != options['gender']):
                 print "ERROR: genders don't match"
+
+    return all_tropes
+
+if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser(description='Generate the info dict for tropes')
+    parser.add_argument('--dest', help='source file', required=True)
+    parser.add_argument('--filter', required=False)
+    parser.add_argument('--extended', required=False, action='store_true')
+
+    args = parser.parse_args()
+    all_tropes = build_tropes()
 
     if args.filter:
         filter_list = util.read_json(args.filter)

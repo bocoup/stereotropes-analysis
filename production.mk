@@ -81,7 +81,7 @@ $(output_dir)/gender_splits.json:
 
 film_details:
 	echo "Building detail film files"
-	mkdir -p data/production/films/details
+	mkdir -p $(output_dir)/films/details
 	python -m src.film.detail --src=data/results/films/full_with_similarity.json \
 		--dest=data/production/films/details \
 		--roles data/results/films/roles-female.json \
@@ -90,10 +90,21 @@ film_details:
 
 
 #
+# Trope details data
+#
+trope_details:
+	echo "Building trope detail files"
+	mkdir -p $(output_dir)/tropes/details
+	python -m src.trope.detail --dest=$(output_dir)/tropes/details
+
+#
 # Clean tasks
 #
 clean:
-	rm -rf data/production/
+	rm -rf data/production/*.json
+	rm -rf data/production/genres/*.json
+	rm -rf data/production/films/details/*.json
+	rm -rf data/production/tropes/details/*.json
 	mkdir -p data/production
 
 #
@@ -120,5 +131,6 @@ copy:
 	rsync -a data/production/adjectives_network.json $(target)/adjectives
 	rsync -a data/production/gender_splits.json $(target)/gender
 	rsync -a data/production/films/details/ $(target)/films/detail/
+	rsync -a data/production/tropes/details/ $(target)/tropes/detail/
 
 
