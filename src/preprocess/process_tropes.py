@@ -72,12 +72,12 @@ def extract_adjectives(path, exclude):
     for tagged in tagged_tropes:
         try:
             adjectives = tagged[2]['JJ']
+            adjectives = [a.lower() for a in adjectives]
         except:
             adjectives = []
         if exclude is not None:
             adjectives = [x for x in adjectives if x not in exclude]
 
-        adjectives = [a.lower() for a in adjectives]
         results.append((tagged[0], adjectives))
     return results
 
