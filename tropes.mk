@@ -90,10 +90,10 @@ $(RESULTS_DIR)/tropes_tagged-male.json: $(RESULTS_DIR)/only_tropes-male.json
 #
 # Adjective extraction
 #
-$(RESULTS_DIR)/tropes_adjectives-female.json: $(RESULTS_DIR)/tropes_tagged-female.json
+$(RESULTS_DIR)/tropes_adjectives-female.json: $(RESULTS_DIR)/tropes_tagged-female.json data/handmade/exclude_adjectives.json
 	python -m src.preprocess.process_tropes --command extract_adjectives --source $< --dest $@ --exclude_adj data/handmade/exclude_adjectives.json
 	touch -c $@
-$(RESULTS_DIR)/tropes_adjectives-male.json: $(RESULTS_DIR)/tropes_tagged-male.json
+$(RESULTS_DIR)/tropes_adjectives-male.json: $(RESULTS_DIR)/tropes_tagged-male.json data/handmade/exclude_adjectives.json
 	python -m src.preprocess.process_tropes --command extract_adjectives --source $< --dest $@ --exclude_adj data/handmade/exclude_adjectives.json
 	touch -c $@
 
