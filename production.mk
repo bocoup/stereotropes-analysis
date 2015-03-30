@@ -132,5 +132,6 @@ copy:
 	rsync -a data/production/gender_splits.json $(target)/gender
 	rsync -a data/production/films/details/ $(target)/films/detail/
 	rsync -a data/production/tropes/details/ $(target)/tropes/detail/
+	rsync -a data/production/genres/ $(target)/films/genres/
 
 
