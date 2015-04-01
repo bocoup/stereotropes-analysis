@@ -13,6 +13,12 @@ def read_json(path):
     file.close
     return data
 
+def read_txt(path):
+    file = open(os.path.abspath(path), 'r')
+    data = file.read().splitlines()
+    file.close
+    return data
+
 def pp(data):
   pp = pprint.PrettyPrinter(indent=4)
   pp.pprint(data)
