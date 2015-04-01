@@ -24,6 +24,8 @@ def score(film):
     a film only has a score if it has both audience_score and
     a critics_score. The score is the audience_score.
     '''
+    if "#" in film["id"]:
+        return 0
     if ("rtmetadata" in film and "ratings" in film["rtmetadata"] and "audience_score" in film["rtmetadata"]["ratings"]) and ( "critics_score" in film["rtmetadata"]["ratings"] and film["rtmetadata"]["ratings"]["critics_score"] > 0):
         return film["rtmetadata"]["ratings"]["audience_score"]
     return 0
