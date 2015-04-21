@@ -1,29 +1,58 @@
-# Stereotropes-analysis
+# Stereotropes Analysis
 
-Scripts used to generate and process the data used for [Stereotropes](stereotropes.bocoup.com).
+This repository is a companion for the [Stereotropes](stereotropes.bocoup.com)
+project.
+
+Stereotropes is an interactive experiment, exploring a set of tropes authored
+by the community on http://tvtropes.org that are categorized as being always
+female or always male.
+
+The python and make scripts in this repository are used to generate the data
+used to power the Stereotropes application, including
+
 
 ## About
 
-Set of tools written in python to extract data from DB Tropes and perform text analysis on it.
-This repo is also used to mash up film information from Rotten Tomatoes and IMDB with the TV Tropes data.
+This repository contains a set of tools written in python to extract data from
+several sources including [DB Tropes](http://dbtropes.org), [OMDB](http://omdbapi.com)
+and [Rotten Tomatoes](http://rottentomatoes.com).
 
+These scripts:
+
+* collects adjectives from trope discriptions
+* explore the gender balance of language used to describe tropes through the log likelihood method
+* collect metadata about tropes
+* collect metadata about films
+* explore connections between tropes through adjective use
+* explore connections between films through use of tropes
 
 The data pipeline is controlled by a set of Makefiles.
 
- - tropes.mk
- - films.mk
- - production.mk
+ - `tropes.mk`
+ - `films.mk`
+ - `production.mk`
 
 These in turn execute the python scripts needed to generate data for Stereotropes.
 
-`tropes.mk` performs trope related tasks. Tropes are extracted from raw sparql files. Images for tropes are downloaded from TV Tropes. Tropes are filtered to remove unisex tropes. Words in trope descriptions are tagged and adjectives extracted.
+`tropes.mk` performs trope related tasks. Tropes are extracted from raw sparql
+files. Images for tropes are downloaded from TV Tropes. Tropes are filtered to
+remove unisex tropes. Words in trope descriptions are tagged and adjectives
+extracted.
 
-`films.mk` performs film related tasks. Film details are extracted from IMDB and rotten tomatoes. Mappings between films and tropes are generated.
+`films.mk` performs film related tasks. Film details are extracted from IMDB
+and rotten tomatoes. Mappings between films and tropes are generated.
 
-`production.mk` produces data needed in the client for its visualization and exploration capabilities. Film lists and trope lists are generated. Adjective lists are created.
+`production.mk` produces data needed in the client for its visualization and
+exploration capabilities. Film lists and trope lists are generated.
+Adjective lists are created.
 
 ## Running
 
 ```
 make film_details -f production.mk
 ```
+
+## Resources
+
+We learned a lot about Log Liklihood from this fantastic [iPython Notebook](http://nbviewer.ipython.org/github/Prooffreader/Misc_ipynb/blob/master/billboard_charts/billboard_top_words.ipynb) put together
+for the the analysis and visualization article "[Most Decade-specific words in Billboard popular song titles, 1980 - 2014](http://www.prooffreader.com/2014/12/most-decade-specific-words-in-billboard.html)".
