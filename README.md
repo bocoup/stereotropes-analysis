@@ -7,9 +7,14 @@ Stereotropes is an interactive experiment, exploring a set of tropes authored
 by the community on http://tvtropes.org that are categorized as being always
 female or always male.
 
-The python and make scripts in this repository are used to generate the data
-used to power the Stereotropes application, including
+The scripts in this repository are used to generate the data
+used to power the Stereotropes application. Some of this data can be found here:
 
+http://github.com/bocoup/stereotropes-data-public
+
+The code utilizing this data lives at:
+
+http://github.com/bocoup/stereotropes-client
 
 ## About
 
