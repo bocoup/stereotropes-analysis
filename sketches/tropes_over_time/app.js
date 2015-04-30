@@ -127,7 +127,7 @@ $(function() {
   };
 
   var getData = function(gender, callback) {
-    return $.ajax('../../data/results/trope_films-' + gender + '.json')
+    return $.ajax('../../data/results/films/trope_films-' + gender + '.json')
       .then(callback);
   };
 
